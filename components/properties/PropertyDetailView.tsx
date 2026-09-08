@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import {
   X,
   MapPin,
@@ -165,11 +165,19 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   const t = DETAIL_COPY[lang];
   const isRtl = lang === 'ar';
 
-  // Lock body scroll when modal is active
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Lock body scroll when modal is active, reset scroll to top, and focus container
   useEffect(() => {
     if (!property) return;
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+      scrollContainerRef.current.focus();
+    }
+
     return () => {
       document.body.style.overflow = originalOverflow;
     };
@@ -521,28 +529,37 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   const isGoldenVisaEligible = property.priceAED >= 2000000;
 
   return (
-    <AnimatePresence>
-      <div
-        className="fixed inset-0 z-50 overflow-y-auto bg-[#0A0E24]/75 backdrop-blur-md flex flex-col justify-start items-center p-0 sm:p-4 md:p-6"
-        role="dialog"
-        aria-modal="true"
-        aria-label={property.name[lang]}
-        dir={isRtl ? 'rtl' : 'ltr'}
-      >
-        {/* Click outside backdrop overlay */}
-        <div
-          className="fixed inset-0 z-0"
-          onClick={onClose}
-          aria-hidden="true"
-        />
+    <div
+      ref={scrollContainerRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain focus:outline-none"
+      role="dialog"
+      aria-modal="true"
+      aria-label={property.name[lang]}
+      dir={isRtl ? 'rtl' : 'ltr'}
+      style={{ WebkitOverflowScrolling: 'touch' }}
+    >
+      {/* Click outside backdrop overlay */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        className="fixed inset-0 bg-[#0A0E24]/80 backdrop-blur-md pointer-events-auto"
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
+      {/* Centering / Full-width Scroll Wrapper */}
+      <div className="relative z-10 min-h-full w-full flex items-start justify-center p-0 sm:p-4 md:p-8 pointer-events-none">
         {/* Main Editorial Container */}
         <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.98 }}
+          initial={{ opacity: 0, y: 30, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 30, scale: 0.98 }}
+          exit={{ opacity: 0, y: 20, scale: 0.98 }}
           transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-          className="relative z-10 w-full max-w-6xl bg-[#FCFAF7] text-[#0A0E24] shadow-2xl rounded-none sm:rounded-3xl border border-[#0A0E24]/10 overflow-hidden my-0 sm:my-6"
+          className="relative w-full max-w-6xl my-0 sm:my-6 bg-[#FCFAF7] text-[#0A0E24] shadow-2xl rounded-none sm:rounded-3xl border border-[#0A0E24]/10 overflow-hidden shrink-0 pointer-events-auto"
+          onClick={(e) => e.stopPropagation()}
         >
           {/* ============================================================== */}
           {/* 1. TOP EDITORIAL BAR (Navigation & Actions)                    */}
@@ -906,7 +923,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
               </div>
 
               {/* Blueprint SVG/Graphic Container */}
-              <div className="w-full min-h-[360px] sm:min-h-[460px] overflow-auto flex items-center justify-center p-4">
+              <div
+                className={`w-full min-h-[360px] sm:min-h-[460px] ${
+                  blueprintZoom > 1 ? 'overflow-auto' : 'overflow-hidden'
+                } flex items-center justify-center p-4`}
+              >
                 <div
                   style={{
                     transform: `scale(${blueprintZoom})`,
@@ -1182,6 +1203,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
             </div>
           </footer>
         </motion.div>
+      </div>
 
         {/* ============================================================== */}
         {/* MODAL: FULLSCREEN BLUEPRINT CAD INSPECTION LIGHTBOX           */}
@@ -1340,7 +1362,6 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
             </div>
           </div>
         )}
-      </div>
-    </AnimatePresence>
+    </div>
   );
 };

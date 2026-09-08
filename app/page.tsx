@@ -126,6 +126,7 @@ export default function Home() {
       <AnimatePresence>
         {selectedProperty && (
           <PropertyDetailView
+            key={selectedProperty.slug}
             property={selectedProperty}
             lang={lang}
             currency={currency}
