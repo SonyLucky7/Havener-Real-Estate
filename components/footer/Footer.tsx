@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { Globe, ArrowUp } from 'lucide-react';
@@ -24,10 +25,10 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="relative bg-[#050608] border-t border-white/[0.08] text-[#8E95A5] overflow-hidden">
+    <footer className="relative bg-[#050711] border-t border-white/[0.08] text-[#8E95A5] overflow-hidden">
       {/* Subtle architectural geometric watermark */}
-      <div className="absolute -bottom-24 -right-24 w-96 h-96 border border-[#C5A880]/5 rounded-full pointer-events-none" />
-      <div className="absolute -bottom-48 -right-48 w-[500px] h-[500px] border border-[#C5A880]/5 rounded-full pointer-events-none" />
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 border border-[#E8922D]/5 rounded-full pointer-events-none" />
+      <div className="absolute -bottom-48 -right-48 w-[500px] h-[500px] border border-[#E8922D]/5 rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-20 pb-12">
         {/* Main Footer Matrix */}
@@ -35,12 +36,13 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Brand Column */}
           <div className="lg:col-span-5">
             <Link href="#hero" className="inline-block focus:outline-none mb-4">
-              <span className="font-serif text-2xl tracking-[0.2em] text-[#F5F2EB] block">
-                HAVENER PROPERTY
-              </span>
-              <span className="text-[10px] tracking-[0.3em] uppercase text-[#C5A880] font-sans font-medium block mt-1">
-                DUBAI LUXURY LIVING
-              </span>
+              <Image
+                src="/havener-logo.png"
+                alt="Havener Real Estate"
+                width={180}
+                height={54}
+                className="h-12 w-auto object-contain"
+              />
             </Link>
 
             <p className="text-xs sm:text-sm text-[#8E95A5] leading-relaxed max-w-sm mb-6 font-light">
@@ -50,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="flex items-center gap-3">
               <button
                 onClick={onLanguageToggle}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs text-[#C5A880] transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs text-[#E8922D] transition-colors"
               >
                 <Globe className="w-3.5 h-3.5" />
                 <span>{lang === 'en' ? 'العربية' : 'English'}</span>
@@ -58,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({
 
               <button
                 onClick={onOpenConsultation}
-                className="text-xs text-[#F5F2EB] hover:text-[#C5A880] tracking-wider uppercase underline underline-offset-4 font-medium transition-colors"
+                className="text-xs text-[#F5F2EB] hover:text-[#E8922D] tracking-wider uppercase underline underline-offset-4 font-medium transition-colors"
               >
                 {lang === 'ar' ? 'طلب استشارة خاصة' : 'Private Advisory'}
               </button>
@@ -122,15 +124,15 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="space-y-3 text-[11px] leading-relaxed text-[#6E7485]">
               <p>{t.disclaimerText}</p>
               <div className="flex items-center gap-4 pt-2 text-[#8E95A5]">
-                <a href="#contact" className="hover:text-[#C5A880] transition-colors">
+                <a href="#contact" className="hover:text-[#E8922D] transition-colors">
                   {t.privacyPolicy}
                 </a>
                 <span>·</span>
-                <a href="#contact" className="hover:text-[#C5A880] transition-colors">
+                <a href="#contact" className="hover:text-[#E8922D] transition-colors">
                   {t.termsOfService}
                 </a>
                 <span>·</span>
-                <a href="#contact" className="hover:text-[#C5A880] transition-colors">
+                <a href="#contact" className="hover:text-[#E8922D] transition-colors">
                   {t.investmentDisclaimer}
                 </a>
               </div>
@@ -144,14 +146,14 @@ export const Footer: React.FC<FooterProps> = ({
 
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 text-xs text-[#8E95A5] hover:text-[#C5A880] transition-colors group"
+            className="flex items-center gap-2 text-xs text-[#8E95A5] hover:text-[#E8922D] transition-colors group"
             aria-label="Scroll to top"
           >
             <span className="uppercase tracking-widest text-[10px]">
               {lang === 'ar' ? 'العودة للأعلى' : 'Back to top'}
             </span>
-            <span className="w-6 h-6 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center group-hover:border-[#C5A880] transition-colors">
-              <ArrowUp className="w-3 h-3 text-[#C5A880]" />
+            <span className="w-6 h-6 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center group-hover:border-[#E8922D] transition-colors">
+              <ArrowUp className="w-3 h-3 text-[#E8922D]" />
             </span>
           </button>
         </div>

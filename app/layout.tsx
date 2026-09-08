@@ -31,7 +31,7 @@ const cairo = Cairo({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#060709",
+  themeColor: "#050711",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -120,7 +120,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#060709] text-[#F5F2EB] font-sans selection:bg-[#C5A880]/30 selection:text-white">
+      <body className="min-h-full flex flex-col bg-[#050711] text-[#F5F2EB] font-sans selection:bg-[#E8922D]/30 selection:text-white">
         {children}
       </body>
     </html>

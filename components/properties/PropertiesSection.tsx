@@ -54,13 +54,13 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
   return (
     <section
       id="properties"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#060709] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#050711] border-t border-white/[0.06] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 sm:mb-16">
           <div className="max-w-2xl">
-            <span className="text-[10px] tracking-[0.25em] uppercase text-[#C5A880] font-semibold block mb-3">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold block mb-3">
               {t.eyebrow}
             </span>
             <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-none mb-4">
@@ -93,7 +93,7 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                 onClick={() => setActiveCategory(cat.id)}
                 className={`px-4 py-2 text-xs font-semibold tracking-wider rounded-full transition-all duration-300 whitespace-nowrap ${
                   isActive
-                    ? 'bg-[#C5A880] text-[#08090C] shadow-md shadow-[#C5A880]/20'
+                    ? 'bg-[#E8922D] text-[#070A16] shadow-md shadow-[#E8922D]/20'
                     : 'bg-white/[0.03] text-[#8E95A5] hover:text-[#F5F2EB] hover:bg-white/[0.06] border border-white/[0.06]'
                 }`}
               >
@@ -127,7 +127,7 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
               </p>
               <button
                 onClick={() => setActiveCategory('all')}
-                className="text-xs text-[#C5A880] uppercase tracking-wider underline font-medium"
+                className="text-xs text-[#E8922D] uppercase tracking-wider underline font-medium"
               >
                 {lang === 'ar' ? 'عرض كافة العقارات' : 'View all properties'}
               </button>

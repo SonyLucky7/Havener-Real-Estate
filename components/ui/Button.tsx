@@ -25,7 +25,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'group inline-flex items-center justify-center font-medium tracking-wide transition-all duration-300 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A880] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060709] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap';
+      'group inline-flex items-center justify-center font-medium tracking-wide transition-all duration-300 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8922D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050711] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap';
 
     const sizeStyles = {
       sm: 'text-xs px-4 py-2 gap-2 h-9',
@@ -34,18 +34,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const variantStyles = {
-      gold: 'bg-gradient-to-r from-[#D8B682] via-[#C5A880] to-[#A8875A] text-[#08090C] hover:brightness-110 shadow-lg shadow-[#C5A880]/15 font-semibold',
+      gold: 'bg-gradient-to-r from-[#E8922D] via-[#F0A845] to-[#C47A1F] text-[#070A16] hover:brightness-110 shadow-lg shadow-[#E8922D]/20 font-semibold',
       glass:
-        'bg-white/[0.04] hover:bg-white/[0.08] text-[#F5F2EB] border border-white/10 hover:border-[#C5A880]/40 backdrop-blur-md',
+        'bg-white/[0.04] hover:bg-white/[0.08] text-[#F5F2EB] border border-white/10 hover:border-[#E8922D]/40 backdrop-blur-md',
       outline:
-        'bg-transparent hover:bg-[#C5A880]/10 text-[#C5A880] border border-[#C5A880]/40 hover:border-[#C5A880]',
+        'bg-transparent hover:bg-[#E8922D]/10 text-[#E8922D] border border-[#E8922D]/40 hover:border-[#E8922D]',
       ghost: 'bg-transparent hover:bg-white/[0.05] text-[#9EA3B0] hover:text-[#F5F2EB]',
     };
 
     const iconCircleStyles = {
-      gold: 'bg-[#08090C]/10 text-[#08090C]',
-      glass: 'bg-white/10 text-[#F5F2EB] group-hover:bg-[#C5A880] group-hover:text-[#08090C]',
-      outline: 'bg-[#C5A880]/15 text-[#C5A880] group-hover:bg-[#C5A880] group-hover:text-[#08090C]',
+      gold: 'bg-[#070A16]/10 text-[#070A16]',
+      glass: 'bg-white/10 text-[#F5F2EB] group-hover:bg-[#E8922D] group-hover:text-[#070A16]',
+      outline: 'bg-[#E8922D]/15 text-[#E8922D] group-hover:bg-[#E8922D] group-hover:text-[#070A16]',
       ghost: 'bg-transparent text-current',
     };
 

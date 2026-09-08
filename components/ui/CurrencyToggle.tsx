@@ -37,7 +37,7 @@ export const CurrencyToggle: React.FC<CurrencyToggleProps> = ({
             className={cn(
               'px-3 py-1 text-xs font-semibold tracking-wider rounded-full transition-all duration-300',
               isActive
-                ? 'bg-gradient-to-r from-[#D8B682] to-[#A8875A] text-[#08090C] shadow-sm font-bold'
+                ? 'bg-gradient-to-r from-[#E8922D] to-[#C47A1F] text-[#070A16] shadow-sm font-bold'
                 : 'text-[#8E95A5] hover:text-[#F5F2EB]'
             )}
           >

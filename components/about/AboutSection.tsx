@@ -14,24 +14,24 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
   const t = TRANSLATIONS[lang].about;
 
   const icons = [
-    <Compass key="0" className="w-4 h-4 text-[#C5A880]" />,
-    <Clock key="1" className="w-4 h-4 text-[#C5A880]" />,
-    <ShieldCheck key="2" className="w-4 h-4 text-[#C5A880]" />,
-    <TrendingUp key="3" className="w-4 h-4 text-[#C5A880]" />,
+    <Compass key="0" className="w-4 h-4 text-[#E8922D]" />,
+    <Clock key="1" className="w-4 h-4 text-[#E8922D]" />,
+    <ShieldCheck key="2" className="w-4 h-4 text-[#E8922D]" />,
+    <TrendingUp key="3" className="w-4 h-4 text-[#E8922D]" />,
   ];
 
   return (
     <section
       id="about"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#08090C] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#080C1A] border-t border-white/[0.06] overflow-hidden"
     >
-      {/* Subtle gold radial ambient glow */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#C5A880]/5 blur-3xl pointer-events-none" />
+      {/* Subtle amber radial ambient glow */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#E8922D]/5 blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         {/* Eyebrow */}
         <div className="mb-4">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#C5A880] font-semibold">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold">
             {t.eyebrow}
           </span>
         </div>
@@ -45,7 +45,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
             </h2>
 
             <div className="space-y-6 max-w-2xl text-[#C0C5D2] text-base sm:text-lg leading-relaxed">
-              <p className="text-[#F5F2EB] font-normal border-l-2 border-[#C5A880] pl-4 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4">
+              <p className="text-[#F5F2EB] font-normal border-l-2 border-[#E8922D] pl-4 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4">
                 {t.lead}
               </p>
               <p className="text-sm sm:text-base text-[#8E95A5]">
@@ -61,10 +61,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
               {t.values.map((v, idx) => (
                 <div
                   key={v.label}
-                  className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.07] hover:border-[#C5A880]/30 transition-colors group"
+                  className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.07] hover:border-[#E8922D]/30 transition-colors group"
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="p-2 rounded-lg bg-[#C5A880]/10 group-hover:bg-[#C5A880]/20 transition-colors">
+                    <span className="p-2 rounded-lg bg-[#E8922D]/10 group-hover:bg-[#E8922D]/20 transition-colors">
                       {icons[idx]}
                     </span>
                     <h3 className="text-sm font-semibold tracking-wide text-[#F5F2EB]">
@@ -90,11 +90,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover transition-transform duration-700 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#060709] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050711] via-transparent to-transparent opacity-80" />
 
                 {/* Floating Architectural Annotation */}
-                <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-[#060709]/80 backdrop-blur-md border border-white/10 text-xs">
-                  <div className="flex items-center justify-between text-[#C5A880] mb-1 font-mono text-[10px] tracking-widest uppercase">
+                <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-[#050711]/80 backdrop-blur-md border border-white/10 text-xs">
+                  <div className="flex items-center justify-between text-[#E8922D] mb-1 font-mono text-[10px] tracking-widest uppercase">
                     <span>PRIVATE ARCHITECTURAL ADVISORY</span>
                     <span>EST. 2026</span>
                   </div>
@@ -105,8 +105,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
               </div>
             </div>
 
-            {/* Subtle floating gold stamp detail */}
-            <div className="absolute -top-4 -right-4 hidden sm:flex w-20 h-20 rounded-full border border-[#C5A880]/30 items-center justify-center p-2 text-center text-[9px] uppercase tracking-widest text-[#C5A880] bg-[#060709]/90 backdrop-blur-md">
+            {/* Subtle floating amber stamp detail */}
+            <div className="absolute -top-4 -right-4 hidden sm:flex w-20 h-20 rounded-full border border-[#E8922D]/30 items-center justify-center p-2 text-center text-[9px] uppercase tracking-widest text-[#E8922D] bg-[#050711]/90 backdrop-blur-md">
               <span>DUBAI LUXURY</span>
             </div>
           </div>

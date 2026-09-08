@@ -23,12 +23,12 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
   return (
     <section
       id="trust"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#060709] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#050711] border-t border-white/[0.06] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#C5A880] font-semibold block mb-3">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold block mb-3">
             {t.eyebrow}
           </span>
           <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-none whitespace-pre-line mb-6">
@@ -41,10 +41,10 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
           {t.pillars.map((pillar, idx) => (
             <div
               key={pillar.title}
-              className="p-8 rounded-3xl bg-white/[0.015] border border-white/[0.06] hover:border-[#C5A880]/30 transition-all duration-300 flex flex-col justify-between"
+              className="p-8 rounded-3xl bg-white/[0.015] border border-white/[0.06] hover:border-[#E8922D]/30 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
-                <span className="font-mono text-xs text-[#C5A880] block mb-4">
+                <span className="font-mono text-xs text-[#E8922D] block mb-4">
                   0{idx + 1}
                 </span>
                 <h3 className="font-serif text-xl text-[#F5F2EB] mb-3">
@@ -62,7 +62,7 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
         <div className="p-8 sm:p-10 rounded-3xl bg-white/[0.02] border border-white/[0.08]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-white/[0.06] pb-6">
             <div>
-              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#C5A880] block mb-1">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#E8922D] block mb-1">
                 {lang === 'ar' ? 'شبكة المطورين المعتمدة' : 'Institutional Developer Sourcing'}
               </span>
               <h4 className="font-serif text-lg text-[#F5F2EB]">
@@ -72,7 +72,7 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
               </h4>
             </div>
 
-            <div className="px-3 py-1.5 rounded-full bg-[#C5A880]/10 border border-[#C5A880]/20 text-[11px] font-mono text-[#E5C38C] self-start sm:self-auto">
+            <div className="px-3 py-1.5 rounded-full bg-[#E8922D]/10 border border-[#E8922D]/20 text-[11px] font-mono text-[#F4B85C] self-start sm:self-auto">
               ESCROW PROTECTED
             </div>
           </div>

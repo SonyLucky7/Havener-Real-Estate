@@ -21,16 +21,15 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   onSelectProperty,
 }) => {
   const t = TRANSLATIONS[lang].properties;
-  const isRtl = lang === 'ar';
 
   return (
     <div
       onClick={() => onSelectProperty(property)}
-      className="group cursor-pointer bezel-outer transition-all duration-500 hover:border-[#C5A880]/40 hover:-translate-y-1"
+      className="group cursor-pointer bezel-outer transition-all duration-500 hover:border-[#E8922D]/40 hover:-translate-y-1"
     >
       <div className="bezel-inner overflow-hidden flex flex-col">
         {/* Large Editorial Image Frame */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#0A0B0E]">
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#080C1A]">
           <Image
             src={property.image}
             alt={property.name[lang]}
@@ -38,15 +37,15 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D12] via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080C1A] via-black/20 to-transparent" />
 
           {/* Top Tag Badges */}
           <div className="absolute top-4 inset-x-4 flex items-center justify-between pointer-events-none">
-            <span className="px-3 py-1 rounded-full bg-[#060709]/80 backdrop-blur-md border border-white/10 text-[10px] uppercase tracking-wider font-semibold text-[#E5C38C]">
+            <span className="px-3 py-1 rounded-full bg-[#050711]/80 backdrop-blur-md border border-white/10 text-[10px] uppercase tracking-wider font-semibold text-[#F4B85C]">
               {property.categoryLabel[lang]}
             </span>
 
-            <span className="px-3 py-1 rounded-full bg-[#060709]/80 backdrop-blur-md border border-white/10 text-[10px] uppercase tracking-wider font-medium text-[#C0C5D2]">
+            <span className="px-3 py-1 rounded-full bg-[#050711]/80 backdrop-blur-md border border-white/10 text-[10px] uppercase tracking-wider font-medium text-[#C0C5D2]">
               {property.tag[lang]}
             </span>
           </div>
@@ -62,23 +61,23 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               </span>
             </div>
 
-            <div className="text-right rtl:text-left text-[11px] text-[#C5A880] font-mono">
+            <div className="text-right rtl:text-left text-[11px] text-[#E8922D] font-mono">
               <span>{property.paymentPlan[lang]}</span>
             </div>
           </div>
         </div>
 
         {/* Card Content & Details */}
-        <div className="p-6 sm:p-8 flex flex-col flex-1 justify-between bg-[#0B0D12]">
+        <div className="p-6 sm:p-8 flex flex-col flex-1 justify-between bg-[#080C1A]">
           <div>
             {/* Title & Location */}
             <div className="flex items-start justify-between gap-4 mb-3">
               <div>
-                <h3 className="font-serif text-xl sm:text-2xl text-[#F5F2EB] group-hover:text-[#D8B682] transition-colors leading-snug">
+                <h3 className="font-serif text-xl sm:text-2xl text-[#F5F2EB] group-hover:text-[#F0A845] transition-colors leading-snug">
                   {property.name[lang]}
                 </h3>
                 <div className="flex items-center gap-1.5 text-xs text-[#8E95A5] mt-1">
-                  <MapPin className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                  <MapPin className="w-3.5 h-3.5 text-[#E8922D] shrink-0" />
                   <span>{property.location[lang]}</span>
                   <span className="text-white/20">·</span>
                   <span className="truncate">{property.subLocation[lang]}</span>
@@ -86,10 +85,10 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               </div>
 
               {/* Arrow Indicator */}
-              <div className="w-9 h-9 rounded-full bg-white/[0.04] group-hover:bg-[#C5A880] text-[#F5F2EB] group-hover:text-[#08090C] border border-white/10 flex items-center justify-center transition-all duration-300 shrink-0">
+              <div className="w-9 h-9 rounded-full bg-white/[0.04] group-hover:bg-[#E8922D] text-[#F5F2EB] group-hover:text-[#070A16] border border-white/10 flex items-center justify-center transition-all duration-300 shrink-0">
                 <ArrowUpRight
                   className={`w-4 h-4 transition-transform ${
-                    isRtl
+                    lang === 'ar'
                       ? 'rotate-180 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5'
                       : 'group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
                   }`}
@@ -127,7 +126,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               <span className="text-[10px] uppercase tracking-wider text-[#5A6070]">
                 {t.completionDate}
               </span>
-              <span className="text-[#E5C38C] font-medium text-[11px] truncate">
+              <span className="text-[#F4B85C] font-medium text-[11px] truncate">
                 {property.completion[lang]}
               </span>
             </div>

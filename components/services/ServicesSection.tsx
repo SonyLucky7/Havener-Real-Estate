@@ -20,12 +20,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   return (
     <section
       id="services"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#08090C] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#080C1A] border-t border-white/[0.06] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#C5A880] font-semibold block mb-3">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold block mb-3">
             {t.eyebrow}
           </span>
           <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-none whitespace-pre-line">
@@ -43,10 +43,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             >
               {/* Number and Title */}
               <div className="flex items-start sm:items-center gap-6 sm:gap-10">
-                <span className="font-mono text-sm tracking-widest text-[#C5A880]/60 group-hover:text-[#C5A880] transition-colors">
+                <span className="font-mono text-sm tracking-widest text-[#E8922D]/60 group-hover:text-[#E8922D] transition-colors">
                   0{idx + 1}
                 </span>
-                <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#F5F2EB] group-hover:text-[#D8B682] transition-colors">
+                <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl text-[#F5F2EB] group-hover:text-[#F0A845] transition-colors">
                   {service.title}
                 </h3>
               </div>
@@ -57,7 +57,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   {service.desc}
                 </p>
 
-                <div className="w-10 h-10 rounded-full bg-white/[0.03] group-hover:bg-[#C5A880] text-[#8E95A5] group-hover:text-[#08090C] border border-white/10 flex items-center justify-center transition-all duration-300 shrink-0">
+                <div className="w-10 h-10 rounded-full bg-white/[0.03] group-hover:bg-[#E8922D] text-[#8E95A5] group-hover:text-[#070A16] border border-white/10 flex items-center justify-center transition-all duration-300 shrink-0">
                   <ArrowUpRight
                     className={`w-4 h-4 transition-transform ${
                       isRtl

@@ -26,15 +26,15 @@ export const WhyDubaiSection: React.FC<WhyDubaiSectionProps> = ({ lang }) => {
   return (
     <section
       id="why-dubai"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#060709] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#050711] border-t border-white/[0.06] overflow-hidden"
     >
       {/* Subtle light accents */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[300px] bg-[#C5A880]/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-[500px] h-[300px] bg-[#E8922D]/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#C5A880] font-semibold block mb-3">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold block mb-3">
             {t.eyebrow}
           </span>
           <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-none mb-6">
@@ -57,26 +57,26 @@ export const WhyDubaiSection: React.FC<WhyDubaiSectionProps> = ({ lang }) => {
                 className={cn(
                   'group relative p-8 rounded-3xl transition-all duration-500 cursor-pointer overflow-hidden border',
                   isSelected
-                    ? 'bg-gradient-to-b from-[#12151E] to-[#0A0B0E] border-[#C5A880]/40 shadow-xl shadow-black/40'
+                    ? 'bg-gradient-to-b from-[#111630] to-[#080C1A] border-[#E8922D]/40 shadow-xl shadow-black/40'
                     : 'bg-white/[0.02] border-white/[0.07] hover:border-white/20 hover:bg-white/[0.04]'
                 )}
               >
                 {/* Micro Number & Metric Pill */}
                 <div className="flex items-center justify-between mb-8">
-                  <span className="font-serif text-2xl tracking-widest text-[#C5A880]/60 group-hover:text-[#C5A880] transition-colors">
+                  <span className="font-serif text-2xl tracking-widest text-[#E8922D]/60 group-hover:text-[#E8922D] transition-colors">
                     {pillar.number}
                   </span>
-                  <div className="px-3 py-1 rounded-full bg-[#C5A880]/10 border border-[#C5A880]/20 text-[11px] font-mono text-[#E5C38C]">
+                  <div className="px-3 py-1 rounded-full bg-[#E8922D]/10 border border-[#E8922D]/20 text-[11px] font-mono text-[#F4B85C]">
                     {pillar.metric}
                   </div>
                 </div>
 
                 {/* Pillar Title */}
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="p-2 rounded-xl bg-white/[0.05] text-[#C5A880]">
+                  <span className="p-2 rounded-xl bg-white/[0.05] text-[#E8922D]">
                     {pillarIcons[index]}
                   </span>
-                  <h3 className="font-serif text-lg tracking-wide text-[#F5F2EB] group-hover:text-[#D8B682] transition-colors">
+                  <h3 className="font-serif text-lg tracking-wide text-[#F5F2EB] group-hover:text-[#F0A845] transition-colors">
                     {pillar.title}
                   </h3>
                 </div>
@@ -89,7 +89,7 @@ export const WhyDubaiSection: React.FC<WhyDubaiSectionProps> = ({ lang }) => {
                 {/* Verified Data Note */}
                 <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-[#6E7485]">
                   <span>Verified Anchor</span>
-                  <span className="text-[#C5A880]">{pillar.metricNote}</span>
+                  <span className="text-[#E8922D]">{pillar.metricNote}</span>
                 </div>
               </div>
             );
@@ -99,14 +99,14 @@ export const WhyDubaiSection: React.FC<WhyDubaiSectionProps> = ({ lang }) => {
         {/* Regulatory Governance Note */}
         <div className="mt-16 p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8E95A5]">
           <div className="flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-[#C5A880]" />
+            <span className="w-2 h-2 rounded-full bg-[#E8922D]" />
             <span>
               {lang === 'ar'
                 ? 'تستند جميع الرؤى الاستثمارية إلى الأطر التنظيمية الرسمية لـ دائرة الأراضي والأملاك بدبي (DLD) ومصرف الإمارات المركزي.'
                 : 'All investment criteria are anchored in official Dubai Land Department (DLD) and UAE regulatory frameworks.'}
             </span>
           </div>
-          <span className="font-mono text-[#C5A880] text-[11px] uppercase tracking-wider">
+          <span className="font-mono text-[#E8922D] text-[11px] uppercase tracking-wider">
             DLD COMPLIANT
           </span>
         </div>

@@ -47,16 +47,16 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
 
       {/* Slide-over Drawer Panel */}
       <div
-        className={`relative w-full max-w-2xl bg-[#08090C] border-${
+        className={`relative w-full max-w-2xl bg-[#080C1A] border-${
           isRtl ? 'r' : 'l'
         } border-white/10 h-full flex flex-col justify-between overflow-y-auto z-10 animate-in slide-in-from-${
           isRtl ? 'left' : 'right'
         } duration-400`}
       >
         {/* Top Sticky Header with Close */}
-        <div className="sticky top-0 z-20 flex items-center justify-between p-6 bg-[#08090C]/90 backdrop-blur-xl border-b border-white/[0.08]">
+        <div className="sticky top-0 z-20 flex items-center justify-between p-6 bg-[#080C1A]/90 backdrop-blur-xl border-b border-white/[0.08]">
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1 rounded-full bg-[#C5A880]/15 border border-[#C5A880]/30 text-[10px] uppercase tracking-wider font-semibold text-[#E5C38C]">
+            <span className="px-3 py-1 rounded-full bg-[#E8922D]/15 border border-[#E8922D]/30 text-[10px] uppercase tracking-wider font-semibold text-[#F4B85C]">
               {property.categoryLabel[lang]}
             </span>
             <span className="text-xs text-[#8E95A5] font-mono">
@@ -77,7 +77,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
         <div className="p-6 sm:p-8 space-y-8 flex-1">
           {/* Main Hero Gallery */}
           <div className="space-y-3">
-            <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-[#0A0B0E] border border-white/10">
+            <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-[#080C1A] border border-white/10">
               <Image
                 src={activeImage}
                 alt={property.name[lang]}
@@ -96,7 +96,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
                     onClick={() => setSelectedImageIndex(idx)}
                     className={`relative w-20 h-14 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
                       selectedImageIndex === idx
-                        ? 'border-[#C5A880] scale-95'
+                        ? 'border-[#E8922D] scale-95'
                         : 'border-transparent opacity-60 hover:opacity-100'
                     }`}
                   >
@@ -118,7 +118,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
               {property.name[lang]}
             </h2>
             <div className="flex items-center gap-2 text-sm text-[#8E95A5] mb-6">
-              <MapPin className="w-4 h-4 text-[#C5A880]" />
+              <MapPin className="w-4 h-4 text-[#E8922D]" />
               <span>{property.location[lang]}</span>
               <span className="text-white/20">|</span>
               <span>{property.subLocation[lang]}</span>
@@ -139,7 +139,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
                 <span className="text-xs uppercase tracking-wider text-[#8E95A5] block mb-1">
                   {t.paymentPlan}
                 </span>
-                <span className="text-sm font-semibold text-[#C5A880]">
+                <span className="text-sm font-semibold text-[#E8922D]">
                   {property.paymentPlan[lang]}
                 </span>
               </div>
@@ -179,7 +179,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
               <span className="text-[10px] text-[#5A6070] uppercase tracking-wider block mb-1">
                 {t.completionDate}
               </span>
-              <span className="text-[#E5C38C] font-medium leading-tight block">
+              <span className="text-[#F4B85C] font-medium leading-tight block">
                 {property.completion[lang]}
               </span>
             </div>
@@ -188,7 +188,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
           {/* Payment Milestone Structure */}
           {property.paymentMilestones.length > 0 && (
             <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-              <h4 className="text-xs uppercase tracking-wider font-semibold text-[#C5A880] mb-4">
+              <h4 className="text-xs uppercase tracking-wider font-semibold text-[#E8922D] mb-4">
                 {lang === 'ar' ? 'هيكل خطة السداد' : 'Structured Milestone Breakdown'}
               </h4>
               <div className="grid grid-cols-3 gap-2">
@@ -208,7 +208,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
 
           {/* Description */}
           <div>
-            <h4 className="text-xs uppercase tracking-wider font-semibold text-[#C5A880] mb-2">
+            <h4 className="text-xs uppercase tracking-wider font-semibold text-[#E8922D] mb-2">
               {lang === 'ar' ? 'الرؤية المعمارية' : 'Architectural Narrative'}
             </h4>
             <p className="text-sm text-[#B2B8C6] leading-relaxed">
@@ -218,13 +218,13 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
 
           {/* Highlights */}
           <div>
-            <h4 className="text-xs uppercase tracking-wider font-semibold text-[#C5A880] mb-3">
+            <h4 className="text-xs uppercase tracking-wider font-semibold text-[#E8922D] mb-3">
               {t.keyHighlights}
             </h4>
             <div className="space-y-2.5">
               {property.highlights[lang].map((highlight, idx) => (
                 <div key={idx} className="flex items-start gap-2.5 text-xs text-[#C0C5D2]">
-                  <span className="w-4 h-4 rounded-full bg-[#C5A880]/15 text-[#C5A880] flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-4 h-4 rounded-full bg-[#E8922D]/15 text-[#E8922D] flex items-center justify-center shrink-0 mt-0.5">
                     <Check className="w-2.5 h-2.5" />
                   </span>
                   <span>{highlight}</span>
@@ -235,7 +235,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
         </div>
 
         {/* Bottom Action Footer */}
-        <div className="p-6 bg-[#08090C] border-t border-white/10">
+        <div className="p-6 bg-[#080C1A] border-t border-white/10">
           <Button
             variant="gold"
             size="lg"
