@@ -5,6 +5,8 @@ import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { Button } from '@/components/ui/Button';
 import { Phone, MessageCircle, Mail, MapPin, Shield, CheckCircle2, Send } from 'lucide-react';
+import { RevealText, PopIn } from '@/components/ui/MotionPrimitives';
+import { motion } from 'motion/react';
 import confetti from 'canvas-confetti';
 
 interface ContactSectionProps {
@@ -58,25 +60,32 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
           {/* Left Column: Headline & Direct Concierge Details */}
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div>
-              <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold block mb-3">
-                {t.eyebrow}
-              </span>
-              <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-none mb-6 whitespace-pre-line font-bold">
-                {t.headline}
-              </h2>
-              <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal mb-12">
-                {t.supporting}
-              </p>
+              <PopIn className="mb-3">
+                <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold block">
+                  {t.eyebrow}
+                </span>
+              </PopIn>
+              <RevealText
+                text={t.headline.replace('\n', ' ')}
+                as="h2"
+                className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-none mb-6 font-bold"
+              />
+              <PopIn delay={0.2}>
+                <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal mb-12">
+                  {t.supporting}
+                </p>
+              </PopIn>
             </div>
 
-            {/* Direct Concierge Cards */}
+            {/* Direct Concierge Cards with Micro Animations */}
             <div className="space-y-4">
               <h3 className="text-xs uppercase tracking-widest text-[#2D3E8C] font-mono font-bold mb-4">
                 {t.directContact.title}
               </h3>
 
               {/* WhatsApp Direct */}
-              <a
+              <motion.a
+                whileHover={{ x: isRtl ? -6 : 6, transition: { duration: 0.2 } }}
                 href={`https://wa.me/97140000000?text=${encodeURIComponent(
                   lang === 'ar'
                     ? 'مرحباً، أود الاستفسار عن فرص العقارات الفاخرة في دبي مع هافنر العقارية.'
@@ -97,10 +106,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                     {t.directContact.whatsappValue}
                   </span>
                 </div>
-              </a>
+              </motion.a>
 
               {/* Phone Direct */}
-              <a
+              <motion.a
+                whileHover={{ x: isRtl ? -6 : 6, transition: { duration: 0.2 } }}
                 href="tel:+97140000000"
                 className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 flex items-center gap-4 transition-all duration-300 group shadow-2xs hover:shadow-md"
               >
@@ -115,10 +125,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                     {t.directContact.phoneValue}
                   </span>
                 </div>
-              </a>
+              </motion.a>
 
               {/* Email Direct */}
-              <a
+              <motion.a
+                whileHover={{ x: isRtl ? -6 : 6, transition: { duration: 0.2 } }}
                 href="mailto:concierge@havenerproperty.com"
                 className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 flex items-center gap-4 transition-all duration-300 group shadow-2xs hover:shadow-md"
               >
@@ -133,7 +144,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                     {t.directContact.emailValue}
                   </span>
                 </div>
-              </a>
+              </motion.a>
 
               {/* Office Location */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200/80 flex items-start gap-4 shadow-2xs">
@@ -157,178 +168,180 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
 
           {/* Right Column: Luxury Form */}
           <div className="lg:col-span-7">
-            <div className="bezel-outer">
-              <div className="bezel-inner p-6 sm:p-10">
-                {isSuccess ? (
-                  <div className="py-16 text-center flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-full bg-[#2D3E8C]/10 border border-[#2D3E8C]/30 flex items-center justify-center mb-6">
-                      <CheckCircle2 className="w-8 h-8 text-[#2D3E8C]" />
-                    </div>
-                    <h3 className="text-2xl sm:text-3xl font-serif text-[#0A0E24] mb-4 font-bold">
-                      {t.form.successHeadline}
-                    </h3>
-                    <p className="text-slate-600 text-sm sm:text-base max-w-md mx-auto mb-8 leading-relaxed font-normal">
-                      {t.form.successMessage}
-                    </p>
-                    <Button
-                      variant="gold"
-                      onClick={() => setIsSuccess(false)}
-                      isRtl={isRtl}
-                    >
-                      {t.form.sendAnother}
-                    </Button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
-                          {t.form.fullName} *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          placeholder={t.form.fullNamePlaceholder}
-                          value={formData.fullName}
-                          onChange={(e) =>
-                            setFormData({ ...formData, fullName: e.target.value })
-                          }
-                          className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
-                        />
+            <PopIn delay={0.25} scale={0.97}>
+              <div className="bezel-outer">
+                <div className="bezel-inner p-6 sm:p-10">
+                  {isSuccess ? (
+                    <div className="py-16 text-center flex flex-col items-center">
+                      <div className="w-16 h-16 rounded-full bg-[#2D3E8C]/10 border border-[#2D3E8C]/30 flex items-center justify-center mb-6">
+                        <CheckCircle2 className="w-8 h-8 text-[#2D3E8C]" />
                       </div>
-
-                      <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
-                          {t.form.email} *
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          placeholder={t.form.emailPlaceholder}
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
-                          {t.form.phone} *
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          placeholder={t.form.phonePlaceholder}
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
-                          className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
-                          {t.form.country}
-                        </label>
-                        <input
-                          type="text"
-                          placeholder={t.form.countryPlaceholder}
-                          value={formData.country}
-                          onChange={(e) =>
-                            setFormData({ ...formData, country: e.target.value })
-                          }
-                          className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
-                          {t.form.interestedIn}
-                        </label>
-                        <select
-                          value={formData.interestedIn}
-                          onChange={(e) =>
-                            setFormData({ ...formData, interestedIn: e.target.value })
-                          }
-                          className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors cursor-pointer"
-                        >
-                          {t.interests.map((item) => (
-                            <option key={item} value={item} className="bg-white text-slate-900">
-                              {item}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
-                          {t.form.budget}
-                        </label>
-                        <select
-                          value={formData.budget}
-                          onChange={(e) =>
-                            setFormData({ ...formData, budget: e.target.value })
-                          }
-                          className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors cursor-pointer"
-                        >
-                          {t.budgets.map((b) => (
-                            <option key={b} value={b} className="bg-white text-slate-900">
-                              {b}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
-                        {t.form.message}
-                      </label>
-                      <textarea
-                        rows={4}
-                        placeholder={t.form.messagePlaceholder}
-                        value={formData.message}
-                        onChange={(e) =>
-                          setFormData({ ...formData, message: e.target.value })
-                        }
-                        className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors resize-none"
-                      />
-                    </div>
-
-                    {/* Fiduciary compliance notice */}
-                    <div className="flex items-center gap-2.5 text-xs text-slate-500 pt-1">
-                      <Shield className="w-4 h-4 text-[#2D3E8C] shrink-0" />
-                      <span>
-                        {lang === 'ar'
-                          ? 'استشارة سرية ومحمية ائتمانياً. لا تتم مشاركة بياناتك مع أطراف خارجية دون إذنك.'
-                          : 'Strict fiduciary confidentiality. Your data is protected and never sold.'}
-                      </span>
-                    </div>
-
-                    <div className="pt-3">
+                      <h3 className="text-2xl sm:text-3xl font-serif text-[#0A0E24] mb-4 font-bold">
+                        {t.form.successHeadline}
+                      </h3>
+                      <p className="text-slate-600 text-sm sm:text-base max-w-md mx-auto mb-8 leading-relaxed font-normal">
+                        {t.form.successMessage}
+                      </p>
                       <Button
-                        type="submit"
                         variant="gold"
-                        size="lg"
-                        className="w-full"
-                        disabled={isSubmitting}
-                        icon={<Send className="w-4 h-4" />}
+                        onClick={() => setIsSuccess(false)}
                         isRtl={isRtl}
                       >
-                        {isSubmitting ? t.form.submitting : t.form.submitCTA}
+                        {t.form.sendAnother}
                       </Button>
                     </div>
-                  </form>
-                )}
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
+                            {t.form.fullName} *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            placeholder={t.form.fullNamePlaceholder}
+                            value={formData.fullName}
+                            onChange={(e) =>
+                              setFormData({ ...formData, fullName: e.target.value })
+                            }
+                            className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
+                            {t.form.email} *
+                          </label>
+                          <input
+                            type="email"
+                            required
+                            placeholder={t.form.emailPlaceholder}
+                            value={formData.email}
+                            onChange={(e) =>
+                              setFormData({ ...formData, email: e.target.value })
+                            }
+                            className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
+                            {t.form.phone} *
+                          </label>
+                          <input
+                            type="tel"
+                            required
+                            placeholder={t.form.phonePlaceholder}
+                            value={formData.phone}
+                            onChange={(e) =>
+                              setFormData({ ...formData, phone: e.target.value })
+                            }
+                            className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
+                            {t.form.country}
+                          </label>
+                          <input
+                            type="text"
+                            placeholder={t.form.countryPlaceholder}
+                            value={formData.country}
+                            onChange={(e) =>
+                              setFormData({ ...formData, country: e.target.value })
+                            }
+                            className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
+                            {t.form.interestedIn}
+                          </label>
+                          <select
+                            value={formData.interestedIn}
+                            onChange={(e) =>
+                              setFormData({ ...formData, interestedIn: e.target.value })
+                            }
+                            className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors cursor-pointer"
+                          >
+                            {t.interests.map((item) => (
+                              <option key={item} value={item} className="bg-white text-slate-900">
+                                {item}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
+                            {t.form.budget}
+                          </label>
+                          <select
+                            value={formData.budget}
+                            onChange={(e) =>
+                              setFormData({ ...formData, budget: e.target.value })
+                            }
+                            className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors cursor-pointer"
+                          >
+                            {t.budgets.map((b) => (
+                              <option key={b} value={b} className="bg-white text-slate-900">
+                                {b}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs uppercase tracking-wider text-slate-700 mb-2 font-bold">
+                          {t.form.message}
+                        </label>
+                        <textarea
+                          rows={4}
+                          placeholder={t.form.messagePlaceholder}
+                          value={formData.message}
+                          onChange={(e) =>
+                            setFormData({ ...formData, message: e.target.value })
+                          }
+                          className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors resize-none"
+                        />
+                      </div>
+
+                      {/* Fiduciary compliance notice */}
+                      <div className="flex items-center gap-2.5 text-xs text-slate-500 pt-1">
+                        <Shield className="w-4 h-4 text-[#2D3E8C] shrink-0" />
+                        <span>
+                          {lang === 'ar'
+                            ? 'استشارة سرية ومحمية ائتمانياً. لا تتم مشاركة بياناتك مع أطراف خارجية دون إذنك.'
+                            : 'Strict fiduciary confidentiality. Your data is protected and never sold.'}
+                        </span>
+                      </div>
+
+                      <div className="pt-3">
+                        <Button
+                          type="submit"
+                          variant="gold"
+                          size="lg"
+                          className="w-full"
+                          disabled={isSubmitting}
+                          icon={<Send className="w-4 h-4" />}
+                          isRtl={isRtl}
+                        >
+                          {isSubmitting ? t.form.submitting : t.form.submitCTA}
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                </div>
               </div>
-            </div>
+            </PopIn>
           </div>
         </div>
       </div>

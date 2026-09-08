@@ -6,6 +6,7 @@ import { Property, Language, Currency } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { formatPrice } from '@/lib/utils';
 import { MapPin, ArrowUpRight } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface PropertyCardProps {
   property: Property;
@@ -23,9 +24,11 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
   const t = TRANSLATIONS[lang].properties;
 
   return (
-    <div
+    <motion.div
       onClick={() => onSelectProperty(property)}
-      className="group cursor-pointer bezel-outer transition-all duration-500 hover:-translate-y-1"
+      whileHover={{ y: -6, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
+      whileTap={{ scale: 0.99 }}
+      className="group cursor-pointer bezel-outer transition-shadow duration-500 hover:shadow-xl hover:shadow-blue-950/10"
     >
       <div className="bezel-inner overflow-hidden flex flex-col">
         {/* Large Editorial Image Frame */}
@@ -35,7 +38,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
             alt={property.name[lang]}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
+            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-108"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
@@ -85,7 +88,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
               </div>
 
               {/* Arrow Indicator */}
-              <div className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-[#2D3E8C] text-slate-700 group-hover:text-white border border-slate-200 flex items-center justify-center transition-all duration-300 shrink-0 shadow-2xs">
+              <div className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-[#2D3E8C] text-slate-700 group-hover:text-white border border-slate-200 flex items-center justify-center transition-all duration-300 shrink-0 shadow-2xs group-hover:scale-105">
                 <ArrowUpRight
                   className={`w-4 h-4 transition-transform ${
                     lang === 'ar'
@@ -133,6 +136,6 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

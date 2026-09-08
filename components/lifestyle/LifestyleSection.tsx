@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { MapPin } from 'lucide-react';
+import { RevealText, PopIn } from '@/components/ui/MotionPrimitives';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface LifestyleSectionProps {
   lang: Language;
@@ -61,66 +63,88 @@ export const LifestyleSection: React.FC<LifestyleSectionProps> = ({ lang }) => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold block mb-3">
-            {t.eyebrow}
-          </span>
-          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-none mb-6 whitespace-pre-line font-bold">
-            {t.headline}
-          </h2>
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-            {t.copy}
-          </p>
+          <PopIn className="mb-3">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold block">
+              {t.eyebrow}
+            </span>
+          </PopIn>
+          <RevealText
+            text={t.headline.replace('\n', ' ')}
+            as="h2"
+            className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-none mb-6 font-bold"
+          />
+          <PopIn delay={0.2}>
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+              {t.copy}
+            </p>
+          </PopIn>
         </div>
 
         {/* Interactive Full-Width Showcase */}
         <div className="space-y-6">
-          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full rounded-3xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xl shadow-slate-900/5">
-            <Image
-              src={LIFESTYLE_MEDIA[activeIndex].image}
-              alt={LIFESTYLE_MEDIA[activeIndex].title[lang]}
-              fill
-              sizes="(max-width: 1400px) 100vw, 1400px"
-              className="object-cover transition-all duration-700 brightness-95"
-              priority={false}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <PopIn className="relative aspect-[16/9] sm:aspect-[21/9] w-full rounded-3xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xl shadow-slate-900/5">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIndex}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={LIFESTYLE_MEDIA[activeIndex].image}
+                  alt={LIFESTYLE_MEDIA[activeIndex].title[lang]}
+                  fill
+                  sizes="(max-width: 1400px) 100vw, 1400px"
+                  className="object-cover brightness-95"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-            {/* In-Image Caption Strip */}
-            <div className="absolute bottom-6 sm:bottom-10 inset-x-6 sm:inset-x-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-[#FDE68A] font-mono block mb-2 font-bold">
-                  {LIFESTYLE_MEDIA[activeIndex].tag[lang]}
-                </span>
-                <h3 className="font-serif text-2xl sm:text-4xl text-white font-bold drop-shadow-xs">
-                  {LIFESTYLE_MEDIA[activeIndex].title[lang]}
-                </h3>
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-200 mt-2">
-                  <MapPin className="w-3.5 h-3.5 text-[#E8922D]" />
-                  <span>{LIFESTYLE_MEDIA[activeIndex].location[lang]}</span>
+                {/* In-Image Caption Strip */}
+                <div className="absolute bottom-6 sm:bottom-10 inset-x-6 sm:inset-x-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.4 }}
+                  >
+                    <span className="text-[10px] tracking-[0.2em] uppercase text-[#FDE68A] font-mono block mb-2 font-bold">
+                      {LIFESTYLE_MEDIA[activeIndex].tag[lang]}
+                    </span>
+                    <h3 className="font-serif text-2xl sm:text-4xl text-white font-bold drop-shadow-xs">
+                      {LIFESTYLE_MEDIA[activeIndex].title[lang]}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-200 mt-2">
+                      <MapPin className="w-3.5 h-3.5 text-[#E8922D]" />
+                      <span>{LIFESTYLE_MEDIA[activeIndex].location[lang]}</span>
+                    </div>
+                  </motion.div>
+
+                  {/* Counter Indicator */}
+                  <div className="font-mono text-sm tracking-widest text-slate-300">
+                    <span className="text-white font-bold">0{activeIndex + 1}</span>
+                    <span className="mx-1">/</span>
+                    <span>0{LIFESTYLE_MEDIA.length}</span>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
+            </AnimatePresence>
+          </PopIn>
 
-              {/* Counter Indicator */}
-              <div className="font-mono text-sm tracking-widest text-slate-300">
-                <span className="text-white font-bold">0{activeIndex + 1}</span>
-                <span className="mx-1">/</span>
-                <span>0{LIFESTYLE_MEDIA.length}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Selector Thumbnails */}
+          {/* Selector Thumbnails with Smooth Active Tabs */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {LIFESTYLE_MEDIA.map((item, index) => {
               const isCurrent = activeIndex === index;
 
               return (
-                <button
+                <motion.button
                   key={index}
                   onClick={() => setActiveIndex(index)}
+                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                  whileTap={{ scale: 0.98 }}
                   className={`text-left rtl:text-right p-5 rounded-2xl border transition-all duration-300 cursor-pointer ${
                     isCurrent
-                      ? 'bg-white border-[#2D3E8C] shadow-md ring-1 ring-[#2D3E8C]/20'
+                      ? 'bg-white border-[#2D3E8C] shadow-md ring-2 ring-[#2D3E8C]/20'
                       : 'bg-[#F8FAFC] border-slate-200/80 hover:bg-white hover:border-slate-300 hover:shadow-xs'
                   }`}
                 >
@@ -133,7 +157,7 @@ export const LifestyleSection: React.FC<LifestyleSectionProps> = ({ lang }) => {
                   <p className="text-xs text-slate-500 mt-1 truncate font-medium">
                     {item.location[lang]}
                   </p>
-                </button>
+                </motion.button>
               );
             })}
           </div>
