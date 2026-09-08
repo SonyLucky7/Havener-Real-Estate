@@ -14,9 +14,9 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
     const container = mountRef.current;
     if (!container) return;
 
-    // Scene Setup
+    // Scene Setup for Bright Luxury Atmosphere
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x050711, 0.035);
+    scene.fog = new THREE.FogExp2(0xffffff, 0.02);
 
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
@@ -32,42 +32,40 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
         powerPreference: 'high-performance',
       });
     } catch {
-      // Graceful fallback for non-WebGL environments
       return;
     }
 
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.15;
     container.appendChild(renderer.domElement);
 
     // Architectural Tower Group
     const towerGroup = new THREE.Group();
     scene.add(towerGroup);
 
-    // Materials
-    const brandMetallicMat = new THREE.MeshStandardMaterial({
-      color: 0x2D3E8C,
+    // Brand Materials: Royal Blue & Warm Amber
+    const royalBlueMat = new THREE.MeshStandardMaterial({
+      color: 0x243274,
+      metalness: 0.85,
+      roughness: 0.2,
+    });
+
+    const amberMetallicMat = new THREE.MeshStandardMaterial({
+      color: 0xe8922d,
       metalness: 0.9,
-      roughness: 0.25,
-      wireframe: false,
-    });
-
-    const darkGlassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x0A0E1A,
-      metalness: 0.1,
       roughness: 0.15,
-      transmission: 0.8,
-      thickness: 0.5,
-      transparent: true,
-      opacity: 0.75,
     });
 
-    const amberEdgeMat = new THREE.MeshStandardMaterial({
-      color: 0xE8922D,
-      metalness: 0.95,
+    const crystallineGlassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x4f62b8,
+      metalness: 0.15,
       roughness: 0.1,
+      transmission: 0.82,
+      thickness: 0.6,
+      transparent: true,
+      opacity: 0.78,
     });
 
     // Tiered Sculptural Tower Facets
@@ -91,14 +89,15 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
         false
       );
 
-      const slab = new THREE.Mesh(geo, i % 3 === 0 ? brandMetallicMat : darkGlassMat);
+      const slabMat = i % 3 === 0 ? royalBlueMat : i % 3 === 1 ? amberMetallicMat : crystallineGlassMat;
+      const slab = new THREE.Mesh(geo, slabMat);
       slab.position.y = yPos;
       slab.rotation.y = progress * Math.PI * 0.45;
       towerGroup.add(slab);
       floorSlabs.push(slab);
 
       const ringGeo = new THREE.TorusGeometry(radiusBottom * 1.02, 0.015, 8, segments);
-      const ring = new THREE.Mesh(ringGeo, amberEdgeMat);
+      const ring = new THREE.Mesh(ringGeo, amberMetallicMat);
       ring.rotation.x = Math.PI / 2;
       ring.position.y = yPos - height / 2;
       slab.add(ring);
@@ -106,26 +105,26 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
 
     // Soaring Spire Pinnacle
     const spireGeo = new THREE.ConeGeometry(0.15, 2.5, 6);
-    const spire = new THREE.Mesh(spireGeo, brandMetallicMat);
+    const spire = new THREE.Mesh(spireGeo, amberMetallicMat);
     spire.position.y = (tiers / 2.5) * 0.52 + 1.2;
     towerGroup.add(spire);
 
     // Floating Elliptical Orbital Rings
     const orbitalGeo = new THREE.TorusGeometry(3.0, 0.025, 12, 100);
-    const orbitalRing = new THREE.Mesh(orbitalGeo, brandMetallicMat);
+    const orbitalRing = new THREE.Mesh(orbitalGeo, royalBlueMat);
     orbitalRing.rotation.x = Math.PI / 2.8;
     orbitalRing.rotation.y = Math.PI / 6;
     orbitalRing.position.y = 0.5;
     towerGroup.add(orbitalRing);
 
     const innerOrbitalGeo = new THREE.TorusGeometry(2.2, 0.015, 8, 80);
-    const innerOrbital = new THREE.Mesh(innerOrbitalGeo, amberEdgeMat);
+    const innerOrbital = new THREE.Mesh(innerOrbitalGeo, amberMetallicMat);
     innerOrbital.rotation.x = -Math.PI / 3;
     innerOrbital.position.y = -0.2;
     towerGroup.add(innerOrbital);
 
-    // Floating Amber Atmospheric Ambient Particles
-    const particleCount = 140;
+    // Ambient Light Motes
+    const particleCount = 120;
     const particleGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
     const particleSpeeds = new Float32Array(particleCount);
@@ -134,7 +133,7 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
       particlePositions[i * 3] = (Math.random() - 0.5) * 12;
       particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
       particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 8;
-      particleSpeeds[i] = 0.002 + Math.random() * 0.005;
+      particleSpeeds[i] = 0.002 + Math.random() * 0.004;
     }
 
     particleGeo.setAttribute(
@@ -143,29 +142,29 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
     );
 
     const particleMat = new THREE.PointsMaterial({
-      color: 0xF4B85C,
-      size: 0.045,
+      color: 0xe8922d,
+      size: 0.04,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.6,
       blending: THREE.AdditiveBlending,
     });
 
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0x222530, 1.8);
+    // Luminous Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2.4);
     scene.add(ambientLight);
 
-    const keyAmberLight = new THREE.DirectionalLight(0xE8B070, 3.2);
-    keyAmberLight.position.set(5, 8, 6);
-    scene.add(keyAmberLight);
+    const sunLight = new THREE.DirectionalLight(0xfff8ee, 3.4);
+    sunLight.position.set(6, 9, 6);
+    scene.add(sunLight);
 
-    const fillBlueLight = new THREE.DirectionalLight(0x2D3E8C, 1.5);
-    fillBlueLight.position.set(-6, -2, -4);
-    scene.add(fillBlueLight);
+    const blueFillLight = new THREE.DirectionalLight(0x2d3e8c, 1.8);
+    blueFillLight.position.set(-6, -2, -4);
+    scene.add(blueFillLight);
 
-    const groundGlow = new THREE.PointLight(0xE8922D, 2, 8);
+    const groundGlow = new THREE.PointLight(0xe8922d, 2.5, 10);
     groundGlow.position.set(0, -3.5, 2);
     scene.add(groundGlow);
 
@@ -197,7 +196,6 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-
       const elapsedTime = clock.getElapsedTime();
 
       // Lerp mouse
@@ -241,9 +239,9 @@ export const LuxuryTowerScene: React.FC<LuxuryTowerSceneProps> = ({ className })
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
-      brandMetallicMat.dispose();
-      darkGlassMat.dispose();
-      amberEdgeMat.dispose();
+      royalBlueMat.dispose();
+      amberMetallicMat.dispose();
+      crystallineGlassMat.dispose();
       spireGeo.dispose();
       orbitalGeo.dispose();
       innerOrbitalGeo.dispose();

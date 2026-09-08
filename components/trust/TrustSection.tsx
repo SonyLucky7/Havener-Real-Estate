@@ -23,15 +23,15 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
   return (
     <section
       id="trust"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#050711] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-white border-t border-slate-200/80 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold block mb-3">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold block mb-3">
             {t.eyebrow}
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-none whitespace-pre-line mb-6">
+          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-none whitespace-pre-line mb-6 font-bold">
             {t.headline}
           </h2>
         </div>
@@ -41,16 +41,16 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
           {t.pillars.map((pillar, idx) => (
             <div
               key={pillar.title}
-              className="p-8 rounded-3xl bg-white/[0.015] border border-white/[0.06] hover:border-[#E8922D]/30 transition-all duration-300 flex flex-col justify-between"
+              className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200/80 hover:bg-white hover:border-[#2D3E8C]/30 hover:shadow-md transition-all duration-300 flex flex-col justify-between"
             >
               <div>
-                <span className="font-mono text-xs text-[#E8922D] block mb-4">
+                <span className="font-mono text-xs text-[#2D3E8C] font-bold block mb-4">
                   0{idx + 1}
                 </span>
-                <h3 className="font-serif text-xl text-[#F5F2EB] mb-3">
+                <h3 className="font-serif text-xl text-[#0A0E24] mb-3 font-bold">
                   {pillar.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#8E95A5] leading-relaxed font-light">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                   {pillar.desc}
                 </p>
               </div>
@@ -59,42 +59,41 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
         </div>
 
         {/* Developer Network / Credibility Strip */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-white/[0.02] border border-white/[0.08]">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-white/[0.06] pb-6">
+        <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-b from-[#F8FAFC] to-white border border-slate-200 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-slate-200/80 pb-6">
             <div>
-              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#E8922D] block mb-1">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#E8922D] font-bold block mb-1">
                 {lang === 'ar' ? 'شبكة المطورين المعتمدة' : 'Institutional Developer Sourcing'}
               </span>
-              <h4 className="font-serif text-lg text-[#F5F2EB]">
+              <h4 className="font-serif text-lg text-[#0A0E24] font-bold">
                 {lang === 'ar'
                   ? 'مشاريع مرخصة ومعتمدة من دائرة الأراضي والأملاك'
                   : 'Licensed Dubai Land Department Project Portfolio'}
               </h4>
             </div>
 
-            <div className="px-3 py-1.5 rounded-full bg-[#E8922D]/10 border border-[#E8922D]/20 text-[11px] font-mono text-[#F4B85C] self-start sm:self-auto">
+            <div className="px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[11px] font-mono font-bold text-[#D97706] self-start sm:self-auto shadow-2xs">
               ESCROW PROTECTED
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 text-center">
             {DEVELOPER_PARTNERS_PLACEHOLDERS.map((dev) => (
               <div
                 key={dev.name}
-                className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] flex flex-col items-center justify-center"
+                className="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 shadow-2xs transition-all flex flex-col items-center justify-center"
               >
-                <span className="font-serif text-sm sm:text-base font-bold tracking-widest text-[#F5F2EB] mb-1">
+                <span className="font-serif text-sm sm:text-base font-bold tracking-widest text-[#0A0E24] mb-1">
                   {dev.name}
                 </span>
-                <span className="text-[9px] uppercase tracking-wider text-[#6E7485]">
+                <span className="text-[9px] uppercase tracking-wider text-slate-500 font-medium">
                   {dev.type}
                 </span>
               </div>
             ))}
           </div>
 
-          {/* Compliance notice adhering strictly to the user prompt */}
-          <p className="text-[11px] text-[#6E7485] text-center mt-6">
+          <p className="text-[11px] text-slate-500 text-center mt-6 font-medium">
             {t.placeholderNotice}
           </p>
         </div>

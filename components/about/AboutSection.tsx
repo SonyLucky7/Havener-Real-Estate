@@ -14,44 +14,45 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
   const t = TRANSLATIONS[lang].about;
 
   const icons = [
-    <Compass key="0" className="w-4 h-4 text-[#E8922D]" />,
+    <Compass key="0" className="w-4 h-4 text-[#2D3E8C]" />,
     <Clock key="1" className="w-4 h-4 text-[#E8922D]" />,
-    <ShieldCheck key="2" className="w-4 h-4 text-[#E8922D]" />,
+    <ShieldCheck key="2" className="w-4 h-4 text-[#2D3E8C]" />,
     <TrendingUp key="3" className="w-4 h-4 text-[#E8922D]" />,
   ];
 
   return (
     <section
       id="about"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#080C1A] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-gradient-to-b from-[#F8FAFC] via-white to-[#F8FAFC] border-t border-slate-200/80 overflow-hidden"
     >
-      {/* Subtle amber radial ambient glow */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#E8922D]/5 blur-3xl pointer-events-none" />
+      {/* Radiant ambient glow */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-[#2D3E8C]/5 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-80 h-80 bg-[#E8922D]/6 blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         {/* Eyebrow */}
         <div className="mb-4">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold">
             {t.eyebrow}
           </span>
         </div>
 
         {/* Asymmetrical Editorial Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Column: Massive Editorial Typography & Philosophy */}
+          {/* Left Column: Editorial Typography & Philosophy */}
           <div className="lg:col-span-7 flex flex-col items-start">
-            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-[1.1] mb-8 whitespace-pre-line">
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-[1.1] mb-8 whitespace-pre-line font-bold">
               {t.headline}
             </h2>
 
-            <div className="space-y-6 max-w-2xl text-[#C0C5D2] text-base sm:text-lg leading-relaxed">
-              <p className="text-[#F5F2EB] font-normal border-l-2 border-[#E8922D] pl-4 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4">
+            <div className="space-y-6 max-w-2xl text-slate-700 text-base sm:text-lg leading-relaxed">
+              <p className="text-[#0A0E24] font-medium border-l-3 border-[#2D3E8C] pl-4 rtl:border-l-0 rtl:border-r-3 rtl:pl-0 rtl:pr-4">
                 {t.lead}
               </p>
-              <p className="text-sm sm:text-base text-[#8E95A5]">
+              <p className="text-sm sm:text-base text-slate-600">
                 {t.body}
               </p>
-              <p className="text-xs sm:text-sm text-[#6E7485] italic font-light">
+              <p className="text-xs sm:text-sm text-slate-500 italic font-normal">
                 {t.secondary}
               </p>
             </div>
@@ -61,17 +62,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
               {t.values.map((v, idx) => (
                 <div
                   key={v.label}
-                  className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.07] hover:border-[#E8922D]/30 transition-colors group"
+                  className="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 shadow-xs hover:shadow-md transition-all group"
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="p-2 rounded-lg bg-[#E8922D]/10 group-hover:bg-[#E8922D]/20 transition-colors">
+                    <span className="p-2 rounded-xl bg-slate-100 group-hover:bg-[#2D3E8C]/10 transition-colors">
                       {icons[idx]}
                     </span>
-                    <h3 className="text-sm font-semibold tracking-wide text-[#F5F2EB]">
+                    <h3 className="text-sm font-bold tracking-wide text-[#0A0E24]">
                       {v.label}
                     </h3>
                   </div>
-                  <p className="text-xs text-[#8E95A5] leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     {v.desc}
                   </p>
                 </div>
@@ -90,23 +91,23 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover transition-transform duration-700 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050711] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
 
                 {/* Floating Architectural Annotation */}
-                <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-[#050711]/80 backdrop-blur-md border border-white/10 text-xs">
-                  <div className="flex items-center justify-between text-[#E8922D] mb-1 font-mono text-[10px] tracking-widest uppercase">
+                <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-md text-xs">
+                  <div className="flex items-center justify-between text-[#2D3E8C] mb-1 font-mono text-[10px] tracking-widest uppercase font-bold">
                     <span>PRIVATE ARCHITECTURAL ADVISORY</span>
-                    <span>EST. 2026</span>
+                    <span className="text-[#E8922D]">EST. 2026</span>
                   </div>
-                  <p className="text-[#B2B8C6] text-[11px] leading-snug">
+                  <p className="text-slate-700 text-[11px] leading-snug">
                     Curating architectural masterpieces across Dubai&apos;s prime waterfront and luxury corridors.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Subtle floating amber stamp detail */}
-            <div className="absolute -top-4 -right-4 hidden sm:flex w-20 h-20 rounded-full border border-[#E8922D]/30 items-center justify-center p-2 text-center text-[9px] uppercase tracking-widest text-[#E8922D] bg-[#050711]/90 backdrop-blur-md">
+            {/* Subtle floating brand stamp detail */}
+            <div className="absolute -top-4 -right-4 hidden sm:flex w-20 h-20 rounded-full border border-[#2D3E8C]/30 items-center justify-center p-2 text-center text-[9px] uppercase tracking-widest text-[#2D3E8C] bg-white/95 backdrop-blur-md shadow-md font-bold">
               <span>DUBAI LUXURY</span>
             </div>
           </div>

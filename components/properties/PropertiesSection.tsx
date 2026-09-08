@@ -54,26 +54,26 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
   return (
     <section
       id="properties"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#050711] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-gradient-to-b from-[#F8FAFC] via-white to-[#F8FAFC] border-t border-slate-200/80 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 sm:mb-16">
           <div className="max-w-2xl">
-            <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold block mb-3">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold block mb-3">
               {t.eyebrow}
             </span>
-            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-none mb-4">
+            <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-none mb-4 font-bold">
               {t.headline}
             </h2>
-            <p className="text-sm sm:text-base text-[#8E95A5] leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
               {t.subhead}
             </p>
           </div>
 
           {/* Currency Switcher */}
           <div className="flex items-center gap-3">
-            <span className="text-xs uppercase tracking-wider text-[#8E95A5] hidden sm:inline">
+            <span className="text-xs uppercase tracking-wider text-slate-500 font-semibold hidden sm:inline">
               {t.currency}:
             </span>
             <CurrencyToggle
@@ -91,10 +91,10 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 text-xs font-semibold tracking-wider rounded-full transition-all duration-300 whitespace-nowrap ${
+                className={`px-4 py-2 text-xs font-semibold tracking-wider rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer ${
                   isActive
-                    ? 'bg-[#E8922D] text-[#070A16] shadow-md shadow-[#E8922D]/20'
-                    : 'bg-white/[0.03] text-[#8E95A5] hover:text-[#F5F2EB] hover:bg-white/[0.06] border border-white/[0.06]'
+                    ? 'bg-gradient-to-r from-[#2D3E8C] to-[#E8922D] text-white shadow-md shadow-blue-900/15'
+                    : 'bg-white text-slate-600 hover:text-[#0A0E24] hover:bg-slate-100 border border-slate-200/80 shadow-2xs'
                 }`}
               >
                 {cat.label}
@@ -120,14 +120,14 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
         {filteredProperties.length === 0 && (
           <div className="py-20 text-center bezel-outer">
             <div className="bezel-inner p-10">
-              <p className="text-[#8E95A5] text-sm mb-4">
+              <p className="text-slate-600 text-sm mb-4 font-medium">
                 {lang === 'ar'
                   ? 'لا توجد عقارات مطابقة حالياً ضمن هذه الفئة.'
                   : 'No properties currently listed in this specific category.'}
               </p>
               <button
                 onClick={() => setActiveCategory('all')}
-                className="text-xs text-[#E8922D] uppercase tracking-wider underline font-medium"
+                className="text-xs text-[#2D3E8C] uppercase tracking-wider underline font-bold"
               >
                 {lang === 'ar' ? 'عرض كافة العقارات' : 'View all properties'}
               </button>

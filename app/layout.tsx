@@ -31,7 +31,7 @@ const cairo = Cairo({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#050711",
+  themeColor: "#FFFFFF",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -93,7 +93,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${plusJakartaSans.variable} ${amiri.variable} ${cairo.variable} h-full antialiased dark`}
+      className={`${cinzel.variable} ${plusJakartaSans.variable} ${amiri.variable} ${cairo.variable} h-full antialiased`}
     >
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -120,7 +120,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#050711] text-[#F5F2EB] font-sans selection:bg-[#E8922D]/30 selection:text-white">
+      <body className="min-h-full flex flex-col bg-white text-[#0A0E24] font-sans selection:bg-[#E8922D]/20 selection:text-[#0A0E24]">
         {children}
       </body>
     </html>

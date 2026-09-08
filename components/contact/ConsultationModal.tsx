@@ -43,7 +43,6 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate luxury advisory routing
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
@@ -52,7 +51,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
           particleCount: 50,
           spread: 60,
           origin: { y: 0.6 },
-          colors: ['#E8922D', '#F0A845', '#2D3E8C'],
+          colors: ['#2D3E8C', '#E8922D', '#F59E0B'],
         });
       } catch {
         // Confetti fallback
@@ -84,7 +83,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/85 backdrop-blur-xl transition-opacity animate-in fade-in duration-300"
+        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
         onClick={onClose}
       />
 
@@ -96,7 +95,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
             onClick={onClose}
             className={`absolute top-6 ${
               isRtl ? 'left-6' : 'right-6'
-            } p-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-[#8E95A5] hover:text-[#F5F2EB] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8922D]`}
+            } p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-[#0A0E24] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D3E8C] cursor-pointer`}
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -104,13 +103,13 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
           {isSuccess ? (
             <div className="py-12 text-center flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-[#E8922D]/15 border border-[#E8922D]/40 flex items-center justify-center mb-6">
-                <CheckCircle2 className="w-8 h-8 text-[#E8922D]" />
+              <div className="w-16 h-16 rounded-full bg-[#2D3E8C]/10 border border-[#2D3E8C]/30 flex items-center justify-center mb-6">
+                <CheckCircle2 className="w-8 h-8 text-[#2D3E8C]" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-serif text-[#F5F2EB] mb-4">
+              <h3 className="text-2xl sm:text-3xl font-serif text-[#0A0E24] mb-4 font-bold">
                 {t.form.successHeadline}
               </h3>
-              <p className="text-[#8E95A5] text-sm sm:text-base max-w-md mx-auto mb-8 leading-relaxed">
+              <p className="text-slate-600 text-sm sm:text-base max-w-md mx-auto mb-8 leading-relaxed font-normal">
                 {t.form.successMessage}
               </p>
               <Button variant="gold" onClick={handleReset} isRtl={isRtl}>
@@ -121,16 +120,16 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
             <div>
               {/* Header */}
               <div className="mb-8">
-                <span className="inline-block text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-medium mb-2">
+                <span className="inline-block text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold mb-2">
                   {t.eyebrow}
                 </span>
                 <h2
                   id="modal-headline"
-                  className="text-2xl sm:text-3xl font-serif text-[#F5F2EB] tracking-tight whitespace-pre-line"
+                  className="text-2xl sm:text-3xl font-serif text-[#0A0E24] tracking-tight whitespace-pre-line font-bold"
                 >
                   {t.headline}
                 </h2>
-                <p className="text-sm text-[#8E95A5] mt-2 max-w-lg leading-relaxed">
+                <p className="text-sm text-slate-600 mt-2 max-w-lg leading-relaxed font-normal">
                   {t.supporting}
                 </p>
               </div>
@@ -139,7 +138,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#E8922D] mb-1.5 font-medium">
+                    <label className="block text-xs uppercase tracking-wider text-slate-700 mb-1.5 font-bold">
                       {t.form.fullName} *
                     </label>
                     <input
@@ -150,12 +149,12 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                       onChange={(e) =>
                         setFormData({ ...formData, fullName: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[#F5F2EB] placeholder-[#5A6070] text-sm focus:outline-none focus:border-[#E8922D] focus:ring-1 focus:ring-[#E8922D] transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#E8922D] mb-1.5 font-medium">
+                    <label className="block text-xs uppercase tracking-wider text-slate-700 mb-1.5 font-bold">
                       {t.form.email} *
                     </label>
                     <input
@@ -166,14 +165,14 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[#F5F2EB] placeholder-[#5A6070] text-sm focus:outline-none focus:border-[#E8922D] focus:ring-1 focus:ring-[#E8922D] transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#E8922D] mb-1.5 font-medium">
+                    <label className="block text-xs uppercase tracking-wider text-slate-700 mb-1.5 font-bold">
                       {t.form.phone} *
                     </label>
                     <input
@@ -184,12 +183,12 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[#F5F2EB] placeholder-[#5A6070] text-sm focus:outline-none focus:border-[#E8922D] focus:ring-1 focus:ring-[#E8922D] transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#E8922D] mb-1.5 font-medium">
+                    <label className="block text-xs uppercase tracking-wider text-slate-700 mb-1.5 font-bold">
                       {t.form.country}
                     </label>
                     <input
@@ -199,14 +198,14 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                       onChange={(e) =>
                         setFormData({ ...formData, country: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[#F5F2EB] placeholder-[#5A6070] text-sm focus:outline-none focus:border-[#E8922D] focus:ring-1 focus:ring-[#E8922D] transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#E8922D] mb-1.5 font-medium">
+                    <label className="block text-xs uppercase tracking-wider text-slate-700 mb-1.5 font-bold">
                       {t.form.interestedIn}
                     </label>
                     <select
@@ -214,10 +213,10 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                       onChange={(e) =>
                         setFormData({ ...formData, interestedIn: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-[#0C1024] border border-white/10 text-[#F5F2EB] text-sm focus:outline-none focus:border-[#E8922D] focus:ring-1 focus:ring-[#E8922D] transition-colors cursor-pointer"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors cursor-pointer"
                     >
                       {t.interests.map((item) => (
-                        <option key={item} value={item} className="bg-[#0C1024] text-white">
+                        <option key={item} value={item} className="bg-white text-slate-900">
                           {item}
                         </option>
                       ))}
@@ -225,7 +224,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#E8922D] mb-1.5 font-medium">
+                    <label className="block text-xs uppercase tracking-wider text-slate-700 mb-1.5 font-bold">
                       {t.form.budget}
                     </label>
                     <select
@@ -233,10 +232,10 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                       onChange={(e) =>
                         setFormData({ ...formData, budget: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-[#0C1024] border border-white/10 text-[#F5F2EB] text-sm focus:outline-none focus:border-[#E8922D] focus:ring-1 focus:ring-[#E8922D] transition-colors cursor-pointer"
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors cursor-pointer"
                     >
                       {t.budgets.map((b) => (
-                        <option key={b} value={b} className="bg-[#0C1024] text-white">
+                        <option key={b} value={b} className="bg-white text-slate-900">
                           {b}
                         </option>
                       ))}
@@ -245,7 +244,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#E8922D] mb-1.5 font-medium">
+                  <label className="block text-xs uppercase tracking-wider text-slate-700 mb-1.5 font-bold">
                     {t.form.message}
                   </label>
                   <textarea
@@ -255,13 +254,13 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-[#F5F2EB] placeholder-[#5A6070] text-sm focus:outline-none focus:border-[#E8922D] focus:ring-1 focus:ring-[#E8922D] transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#0A0E24] placeholder-slate-400 text-sm focus:bg-white focus:outline-none focus:border-[#2D3E8C] focus:ring-1 focus:ring-[#2D3E8C] transition-colors resize-none"
                   />
                 </div>
 
                 {/* Privacy & Escrow Assurance */}
-                <div className="flex items-center gap-2 text-xs text-[#8E95A5] py-1">
-                  <Shield className="w-4 h-4 text-[#E8922D] shrink-0" />
+                <div className="flex items-center gap-2 text-xs text-slate-500 py-1 font-medium">
+                  <Shield className="w-4 h-4 text-[#2D3E8C] shrink-0" />
                   <span>
                     {lang === 'ar'
                       ? 'جميع الاستفسارات مشمولة بالسرية الائتمانية وتخضع لمعايير الأراضي والأملاك بدبي.'

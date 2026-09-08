@@ -56,53 +56,53 @@ export const LifestyleSection: React.FC<LifestyleSectionProps> = ({ lang }) => {
   return (
     <section
       id="lifestyle"
-      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-[#050711] border-t border-white/[0.06] overflow-hidden"
+      className="relative py-28 sm:py-36 px-6 sm:px-8 bg-white border-t border-slate-200/80 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-semibold block mb-3">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#E8922D] font-bold block mb-3">
             {t.eyebrow}
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#F5F2EB] tracking-tight leading-none mb-6 whitespace-pre-line">
+          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl text-[#0A0E24] tracking-tight leading-none mb-6 whitespace-pre-line font-bold">
             {t.headline}
           </h2>
-          <p className="text-base sm:text-lg text-[#B2B8C6] leading-relaxed font-light">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
             {t.copy}
           </p>
         </div>
 
         {/* Interactive Full-Width Showcase */}
         <div className="space-y-6">
-          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full rounded-3xl overflow-hidden border border-white/10 bg-[#080C1A]">
+          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full rounded-3xl overflow-hidden border border-slate-200 bg-slate-100 shadow-xl shadow-slate-900/5">
             <Image
               src={LIFESTYLE_MEDIA[activeIndex].image}
               alt={LIFESTYLE_MEDIA[activeIndex].title[lang]}
               fill
               sizes="(max-width: 1400px) 100vw, 1400px"
-              className="object-cover transition-all duration-700 brightness-90"
+              className="object-cover transition-all duration-700 brightness-95"
               priority={false}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050711] via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
             {/* In-Image Caption Strip */}
             <div className="absolute bottom-6 sm:bottom-10 inset-x-6 sm:inset-x-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-[#F4B85C] font-mono block mb-2">
+                <span className="text-[10px] tracking-[0.2em] uppercase text-[#FDE68A] font-mono block mb-2 font-bold">
                   {LIFESTYLE_MEDIA[activeIndex].tag[lang]}
                 </span>
-                <h3 className="font-serif text-2xl sm:text-4xl text-[#F5F2EB] font-medium">
+                <h3 className="font-serif text-2xl sm:text-4xl text-white font-bold drop-shadow-xs">
                   {LIFESTYLE_MEDIA[activeIndex].title[lang]}
                 </h3>
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-[#C0C5D2] mt-2">
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-200 mt-2">
                   <MapPin className="w-3.5 h-3.5 text-[#E8922D]" />
                   <span>{LIFESTYLE_MEDIA[activeIndex].location[lang]}</span>
                 </div>
               </div>
 
               {/* Counter Indicator */}
-              <div className="font-mono text-sm tracking-widest text-[#8E95A5]">
-                <span className="text-[#F5F2EB] font-bold">0{activeIndex + 1}</span>
+              <div className="font-mono text-sm tracking-widest text-slate-300">
+                <span className="text-white font-bold">0{activeIndex + 1}</span>
                 <span className="mx-1">/</span>
                 <span>0{LIFESTYLE_MEDIA.length}</span>
               </div>
@@ -118,19 +118,19 @@ export const LifestyleSection: React.FC<LifestyleSectionProps> = ({ lang }) => {
                 <button
                   key={index}
                   onClick={() => setActiveIndex(index)}
-                  className={`text-left rtl:text-right p-5 rounded-2xl border transition-all duration-300 ${
+                  className={`text-left rtl:text-right p-5 rounded-2xl border transition-all duration-300 cursor-pointer ${
                     isCurrent
-                      ? 'bg-white/[0.05] border-[#E8922D]/50 shadow-lg'
-                      : 'bg-white/[0.01] border-white/[0.06] hover:border-white/20'
+                      ? 'bg-white border-[#2D3E8C] shadow-md ring-1 ring-[#2D3E8C]/20'
+                      : 'bg-[#F8FAFC] border-slate-200/80 hover:bg-white hover:border-slate-300 hover:shadow-xs'
                   }`}
                 >
-                  <span className="text-[10px] tracking-wider uppercase text-[#E8922D] font-mono block mb-1">
+                  <span className="text-[10px] tracking-wider uppercase text-[#E8922D] font-mono block mb-1 font-bold">
                     0{index + 1} · {item.tag[lang]}
                   </span>
-                  <h4 className="text-sm font-semibold text-[#F5F2EB] truncate">
+                  <h4 className="text-sm font-bold text-[#0A0E24] truncate">
                     {item.title[lang]}
                   </h4>
-                  <p className="text-xs text-[#8E95A5] mt-1 truncate">
+                  <p className="text-xs text-slate-500 mt-1 truncate font-medium">
                     {item.location[lang]}
                   </p>
                 </button>

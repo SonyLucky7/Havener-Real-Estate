@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Menu, X, Globe } from 'lucide-react';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { Button } from '@/components/ui/Button';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 import { cn } from '@/lib/utils';
 
 interface NavbarProps {
@@ -26,7 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -49,37 +48,26 @@ export const Navbar: React.FC<NavbarProps> = ({
         className={cn(
           'fixed top-0 left-0 right-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]',
           isScrolled
-            ? 'py-3 sm:py-4 bg-[#050711]/85 backdrop-blur-xl border-b border-white/[0.08] shadow-2xl shadow-black/60'
-            : 'py-6 sm:py-8 bg-transparent'
+            ? 'py-3 sm:py-3.5 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-md shadow-slate-900/5'
+            : 'py-5 sm:py-6 bg-white/50 backdrop-blur-md border-b border-slate-200/40'
         )}
       >
         <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between">
-          {/* Brand Logo */}
-          <Link
-            href="#hero"
-            className="group flex flex-col focus-visible:outline-none"
-            aria-label="Havener Property Home"
-          >
-            <Image
-              src="/havener-logo.png"
-              alt="Havener Real Estate"
-              width={160}
-              height={48}
-              className="h-10 sm:h-12 w-auto object-contain group-hover:brightness-110 transition-all duration-300"
-              priority
-            />
-          </Link>
+          {/* Brand Logo - Precisely Scaled & Positioned */}
+          <div className="flex items-center">
+            <BrandLogo variant="horizontal" size="md" />
+          </div>
 
           {/* Desktop Navigation Links */}
           <nav
-            className="hidden lg:flex items-center gap-8 xl:gap-10"
+            className="hidden lg:flex items-center gap-7 xl:gap-9"
             aria-label="Main Navigation"
           >
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-xs tracking-[0.15em] uppercase text-[#B2B8C6] hover:text-[#F5F2EB] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#E8922D] hover:after:w-full after:transition-all after:duration-300 font-medium"
+                className="text-xs tracking-[0.14em] uppercase text-slate-700 hover:text-[#0A0E24] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#E8922D] hover:after:w-full after:transition-all after:duration-300 font-semibold"
               >
                 {link.label}
               </a>
@@ -87,14 +75,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Actions */}
-          <div className="hidden sm:flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-3.5">
             {/* Language Switcher */}
             <button
               onClick={onLanguageToggle}
-              className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[#E8922D] text-xs font-semibold tracking-wider transition-all duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E8922D]"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-[#2D3E8C] text-xs font-semibold tracking-wider transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D3E8C]"
               aria-label={`Switch to ${lang === 'en' ? 'Arabic' : 'English'}`}
             >
-              <Globe className="w-3.5 h-3.5" />
+              <Globe className="w-3.5 h-3.5 text-[#E8922D]" />
               <span>{t.nav.languageSwitch}</span>
             </button>
 
@@ -113,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex sm:hidden items-center gap-2">
             <button
               onClick={onLanguageToggle}
-              className="px-2.5 py-1.5 rounded-full bg-white/[0.05] text-[#E8922D] text-xs font-medium border border-white/10"
+              className="px-2.5 py-1.5 rounded-full bg-slate-100 text-[#2D3E8C] text-xs font-semibold border border-slate-200"
               aria-label="Switch Language"
             >
               {t.nav.languageSwitch}
@@ -121,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-full bg-white/[0.05] text-[#F5F2EB] hover:text-[#E8922D] border border-white/10 transition-colors focus:outline-none"
+              className="p-2 rounded-full bg-slate-100 text-slate-800 hover:text-[#E8922D] border border-slate-200 transition-colors focus:outline-none"
               aria-label={isMobileMenuOpen ? 'Close Menu' : 'Open Menu'}
             >
               {isMobileMenuOpen ? (
@@ -137,25 +125,19 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Fullscreen Mobile Drawer */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 bg-[#050711]/98 backdrop-blur-2xl flex flex-col p-6 sm:p-10 justify-between lg:hidden animate-in fade-in duration-300"
+          className="fixed inset-0 z-50 bg-white/98 backdrop-blur-2xl flex flex-col p-6 sm:p-10 justify-between lg:hidden animate-in fade-in duration-300"
           role="dialog"
           aria-modal="true"
         >
-          <div className="flex items-center justify-between border-b border-white/10 pb-6">
-            <Image
-              src="/havener-logo.png"
-              alt="Havener Real Estate"
-              width={140}
-              height={42}
-              className="h-9 w-auto object-contain"
-            />
+          <div className="flex items-center justify-between border-b border-slate-200 pb-5">
+            <BrandLogo variant="horizontal" size="sm" linkToHero={false} />
 
             <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2.5 rounded-full bg-white/[0.06] text-[#F5F2EB] hover:text-[#E8922D] border border-white/10 transition-colors"
+              className="p-2.5 rounded-full bg-slate-100 text-slate-700 hover:text-[#E8922D] border border-slate-200 transition-colors"
               aria-label="Close Menu"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -165,18 +147,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="font-serif text-2xl sm:text-3xl text-[#F5F2EB] hover:text-[#E8922D] transition-colors flex items-center justify-between"
+                className="font-serif text-2xl sm:text-3xl text-slate-900 hover:text-[#E8922D] transition-colors flex items-center justify-between"
                 style={{ transitionDelay: `${idx * 40}ms` }}
               >
                 <span>{link.label}</span>
-                <span className="text-xs text-[#E8922D]/50 font-sans tracking-widest">
+                <span className="text-xs text-[#2D3E8C] font-mono tracking-widest font-semibold">
                   0{idx + 1}
                 </span>
               </a>
             ))}
           </nav>
 
-          <div className="flex flex-col gap-4 pt-6 border-t border-white/10">
+          <div className="flex flex-col gap-4 pt-6 border-t border-slate-200">
             <Button
               variant="gold"
               size="lg"
@@ -189,9 +171,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               {t.nav.consultationCTA}
             </Button>
-            <div className="flex items-center justify-between text-xs text-[#8E95A5] pt-2">
+            <div className="flex items-center justify-between text-xs text-slate-600 pt-2">
               <span>{t.contact.directContact.officeValue}</span>
-              <span className="text-[#E8922D]">DLD Certified</span>
+              <span className="text-[#2D3E8C] font-semibold">DLD Certified</span>
             </div>
           </div>
         </div>

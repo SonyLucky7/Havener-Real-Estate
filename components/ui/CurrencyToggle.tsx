@@ -20,7 +20,7 @@ export const CurrencyToggle: React.FC<CurrencyToggleProps> = ({
   return (
     <div
       className={cn(
-        'inline-flex items-center p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md',
+        'inline-flex items-center p-1 rounded-full bg-slate-100/90 border border-slate-200/80 shadow-xs backdrop-blur-md',
         className
       )}
       role="radiogroup"
@@ -35,10 +35,10 @@ export const CurrencyToggle: React.FC<CurrencyToggleProps> = ({
             role="radio"
             aria-checked={isActive}
             className={cn(
-              'px-3 py-1 text-xs font-semibold tracking-wider rounded-full transition-all duration-300',
+              'px-3 py-1 text-xs font-semibold tracking-wider rounded-full transition-all duration-300 cursor-pointer',
               isActive
-                ? 'bg-gradient-to-r from-[#E8922D] to-[#C47A1F] text-[#070A16] shadow-sm font-bold'
-                : 'text-[#8E95A5] hover:text-[#F5F2EB]'
+                ? 'bg-gradient-to-r from-[#2D3E8C] to-[#E8922D] text-white shadow-sm font-bold'
+                : 'text-slate-600 hover:text-slate-900'
             )}
           >
             {curr}

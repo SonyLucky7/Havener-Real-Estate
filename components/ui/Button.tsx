@@ -25,7 +25,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'group inline-flex items-center justify-center font-medium tracking-wide transition-all duration-300 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8922D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050711] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap';
+      'group inline-flex items-center justify-center font-medium tracking-wide transition-all duration-300 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2D3E8C] focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none select-none whitespace-nowrap cursor-pointer';
 
     const sizeStyles = {
       sm: 'text-xs px-4 py-2 gap-2 h-9',
@@ -34,18 +34,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const variantStyles = {
-      gold: 'bg-gradient-to-r from-[#E8922D] via-[#F0A845] to-[#C47A1F] text-[#070A16] hover:brightness-110 shadow-lg shadow-[#E8922D]/20 font-semibold',
+      gold: 'bg-gradient-to-r from-[#E8922D] via-[#F0A845] to-[#D97706] text-white hover:brightness-105 shadow-md shadow-amber-500/25 hover:shadow-lg hover:shadow-amber-500/35 font-semibold',
       glass:
-        'bg-white/[0.04] hover:bg-white/[0.08] text-[#F5F2EB] border border-white/10 hover:border-[#E8922D]/40 backdrop-blur-md',
+        'bg-white/90 hover:bg-white text-[#0A0E24] border border-slate-200 hover:border-[#2D3E8C]/50 shadow-sm hover:shadow backdrop-blur-md font-semibold',
       outline:
-        'bg-transparent hover:bg-[#E8922D]/10 text-[#E8922D] border border-[#E8922D]/40 hover:border-[#E8922D]',
-      ghost: 'bg-transparent hover:bg-white/[0.05] text-[#9EA3B0] hover:text-[#F5F2EB]',
+        'bg-white hover:bg-amber-50/50 text-[#E8922D] border-1.5 border-[#E8922D]/60 hover:border-[#E8922D] font-semibold',
+      ghost: 'bg-transparent hover:bg-slate-100 text-slate-700 hover:text-[#0A0E24]',
     };
 
     const iconCircleStyles = {
-      gold: 'bg-[#070A16]/10 text-[#070A16]',
-      glass: 'bg-white/10 text-[#F5F2EB] group-hover:bg-[#E8922D] group-hover:text-[#070A16]',
-      outline: 'bg-[#E8922D]/15 text-[#E8922D] group-hover:bg-[#E8922D] group-hover:text-[#070A16]',
+      gold: 'bg-white/20 text-white group-hover:bg-white/30',
+      glass: 'bg-slate-100 text-[#0A0E24] group-hover:bg-[#2D3E8C] group-hover:text-white',
+      outline: 'bg-[#E8922D]/10 text-[#E8922D] group-hover:bg-[#E8922D] group-hover:text-white',
       ghost: 'bg-transparent text-current',
     };
 

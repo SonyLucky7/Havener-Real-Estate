@@ -37,7 +37,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#050711] text-[#F0F1F5] flex flex-col selection:bg-[#E8922D]/30 selection:text-white ${lang === 'ar' ? 'font-sans' : 'font-sans'}`}>
+    <div className={`min-h-screen bg-white text-[#0A0E24] flex flex-col selection:bg-[#E8922D]/20 selection:text-[#0A0E24] ${lang === 'ar' ? 'font-sans' : 'font-sans'}`}>
       {/* Navigation */}
       <Navbar
         lang={lang}
