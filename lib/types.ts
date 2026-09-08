@@ -48,6 +48,17 @@ export interface Property {
   description: LocalizedString;
   tag: LocalizedString;
   architecturalDetails?: LocalizedString;
+  scope?: LocalizedString;
+  mapUrl?: string;
+  blueprintUrl?: string;
+  architecturalNarrative?: LocalizedString;
+  dimensions?: {
+    builtUpArea: string;
+    plotArea?: string;
+    ceilingHeight?: string;
+  };
+  virtualTourAvailable?: boolean;
+  expectedRoi?: string;
 }
 
 export interface ConsultationInquiry {
