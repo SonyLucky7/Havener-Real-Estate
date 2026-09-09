@@ -64,6 +64,7 @@ export const InvestmentSection: React.FC<InvestmentSectionProps> = ({
                 size="md"
                 onClick={onOpenConsultation}
                 isRtl={isRtl}
+                className="w-full sm:w-auto"
               >
                 {lang === 'ar' ? 'ابدأ خطتك الاستثمارية' : 'Initiate Investment Briefing'}
               </Button>

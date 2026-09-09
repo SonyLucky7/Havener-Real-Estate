@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { Button } from '@/components/ui/Button';
-import { SocialLinks } from '@/components/ui/SocialLinks';
 import { Send, MessageCircle, Phone, Mail, MapPin, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { RevealText, PopIn } from '@/components/ui/MotionPrimitives';
 import { motion } from 'motion/react';
@@ -163,14 +162,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                     {t.directContact.hoursValue}
                   </span>
                 </div>
-              </div>
-
-              {/* Social Channels (Instagram, LinkedIn, X, YouTube, Facebook) */}
-              <div className="pt-2">
-                <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-mono font-medium mb-2.5">
-                  {lang === 'ar' ? 'تابعنا على وسائل التواصل' : 'Connect on Social Media'}
-                </span>
-                <SocialLinks variant="light" size="md" />
               </div>
             </div>
           </div>

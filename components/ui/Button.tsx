@@ -55,7 +55,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(baseStyles, sizeStyles[size], variantStyles[variant], className)}
         {...props}
       >
-        <span className="inline-flex items-center justify-center text-center">{children}</span>
+        <span className="inline-flex items-center justify-center text-center truncate">{children}</span>
         {icon && (
           <span
             className={cn(

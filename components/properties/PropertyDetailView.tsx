@@ -29,7 +29,6 @@ import {
 import { Property, Language, Currency, BlueprintRoom } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
-import { PropertyVrTourScene } from '@/components/3d/PropertyVrTourScene';
 
 export interface PropertyDetailViewProps {
   property: Property | null;
@@ -61,7 +60,6 @@ const DETAIL_COPY = {
     section2Subtitle: 'CAD engineering drawings, axial spans, and spatial room programming.',
     cadView: 'Schematic CAD',
     specsView: 'Spatial Programming',
-    vrView: '3D VR View (Observer)',
     spatialScheduleTitle: 'Spatial Programming Schedule',
     spatialScheduleSub: 'Room-by-room volumetric allocation, clearances, and architectural specifications.',
     allSpaces: 'All Spaces',
@@ -80,15 +78,6 @@ const DETAIL_COPY = {
     resetZoom: 'Reset 100%',
     fullscreen: 'Expand Blueprint',
     closeFullscreen: 'Minimize',
-    virtualTourBadge: '3D VR Spatial Walkthrough · Resident Observer',
-    virtualTourSub: 'Experience primary living pavilions and oceanfront terraces alongside the 3D resident observer or switch to First-Person POV at 1.72m eye-level.',
-    launchTour: 'Launch 3D VR Spatial Tour',
-    tourClose: 'Exit Virtual Tour',
-    tourViews: [
-      { name: 'Grand Double-Height Ocean Salon', desc: 'Acoustic glass curtains framing panoramic Gulf sunsets' },
-      { name: 'Primary Master Suite & Ocean Terrace', desc: 'Italian travertine dressing salons & cantilever plunge pool' },
-      { name: 'Cantilever Infinity Pool & Private Jetty', desc: '120ft direct private beach shoreline with yacht access' },
-    ],
     section3Marker: '(03)',
     section3Title: 'Acquisition, Payment Milestones & Investment Metrics',
     section3Subtitle: 'Structured phased milestone breakdown, projected yields, and residency rights.',
@@ -109,7 +98,7 @@ const DETAIL_COPY = {
     footerLegal: 'Havener Property Dubai · Licensed by Dubai Land Department (RERA). Pricing & allocations subject to developer verification.',
   },
   ar: {
-    backToPortfolio: 'العودة إلى الشريط ثلاثي الأبعاد / المحفظة',
+    backToPortfolio: 'العودة إلى المحفظة',
     viewOnMap: 'خريطة جوجل',
     clientDeveloper: 'المطور والجهة المنفذة',
     locationTitle: 'الموقع المتميز',
@@ -129,7 +118,6 @@ const DETAIL_COPY = {
     section2Subtitle: 'مخططات هندسية بصيغة CAD، محاور الأبعاد والبرمجة المكانية للغرف.',
     cadView: 'مخطط CAD الهندسي',
     specsView: 'البرمجة والتوزيع المكاني',
-    vrView: 'جولة ثلاثية الأبعاد (المراقب)',
     spatialScheduleTitle: 'جدول البرمجة والتوزيع المكاني',
     spatialScheduleSub: 'توزيع المساحات، الارتفاعات الحجمية، والمواصفات المعمارية للغرف والأجنحة.',
     allSpaces: 'جميع المساحات',
@@ -148,15 +136,6 @@ const DETAIL_COPY = {
     resetZoom: 'إعادة ضبط 100%',
     fullscreen: 'تكبير المخطط',
     closeFullscreen: 'تصغير',
-    virtualTourBadge: 'جولة افتراضية ثلاثية الأبعاد 360° · تجربة المراقب المقيم',
-    virtualTourSub: 'استكشف الصالونات والتراسات الشاطئية بجوار المراقب ثلاثي الأبعاد أو انتقل إلى منظور عين الشخص (1.72م) بدقة 360°.',
-    launchTour: 'بدء الجولة الافتراضية 360°',
-    tourClose: 'إنهاء الجولة الافتراضية',
-    tourViews: [
-      { name: 'صالون الاستقبال المزدوج المطل على البحر', desc: 'واجهات زجاجية عازلة للصوت تؤطر إطلالات غروب الخليج' },
-      { name: 'جناح الماستر الرئيسي والتراس البحري', desc: 'غرف ملابس من الترافرتين الإيطالي ومسبح خاص معلق' },
-      { name: 'مسبح إنفينيتي المعلق والمرسى الخاص', desc: 'شاطئ خاص بطول 120 قدم مع إمكانية وصول اليخوت' },
-    ],
     section3Marker: '(03)',
     section3Title: 'هيكل الشراء، مراحل السداد والعائد الاستثماري',
     section3Subtitle: 'جدول الدفعات المرحلية، العوائد المتوقعة وحقوق الإقامة طويلة الأمد.',
@@ -245,10 +224,8 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [blueprintZoom, setBlueprintZoom] = useState(1);
   const [isBlueprintFullscreen, setIsBlueprintFullscreen] = useState(false);
-  const [isVirtualTourOpen, setIsVirtualTourOpen] = useState(false);
-  const [tourViewIndex] = useState(0);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [blueprintMode, setBlueprintMode] = useState<'cad' | 'specs' | 'vr'>('cad');
+  const [blueprintMode, setBlueprintMode] = useState<'cad' | 'specs'>('cad');
   const [spatialZoneFilter, setSpatialZoneFilter] = useState<string>('all');
   const [activeHoverRoom, setActiveHoverRoom] = useState<string | null>(null);
 
@@ -283,9 +260,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (isVirtualTourOpen) {
-          setIsVirtualTourOpen(false);
-        } else if (isBlueprintFullscreen) {
+        if (isBlueprintFullscreen) {
           setIsBlueprintFullscreen(false);
         } else {
           onClose();
@@ -294,7 +269,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose, isVirtualTourOpen, isBlueprintFullscreen]);
+  }, [onClose, isBlueprintFullscreen]);
 
   // Handle blueprint zoom controls
   const handleZoomIn = useCallback(() => {
@@ -939,11 +914,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
               </div>
 
               {/* View Switcher & Blueprint Actions */}
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex rounded-xl p-1 bg-white border border-slate-200 shadow-2xs">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 w-full">
+                <div className="grid grid-cols-2 sm:inline-flex rounded-xl p-1 bg-white border border-slate-200 shadow-2xs w-full sm:w-auto">
                   <button
                     onClick={() => setBlueprintMode('cad')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                       blueprintMode === 'cad'
                         ? 'bg-[#2D3E8C] text-white shadow-xs'
                         : 'text-slate-600 hover:text-[#0A0E24]'
@@ -953,7 +928,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   </button>
                   <button
                     onClick={() => setBlueprintMode('specs')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                       blueprintMode === 'specs'
                         ? 'bg-[#2D3E8C] text-white shadow-xs'
                         : 'text-slate-600 hover:text-[#0A0E24]'
@@ -961,24 +936,14 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   >
                     {t.specsView}
                   </button>
-                  <button
-                    onClick={() => setBlueprintMode('vr')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      blueprintMode === 'vr'
-                        ? 'bg-[#E8922D] text-white shadow-xs'
-                        : 'text-slate-600 hover:text-[#0A0E24]'
-                    }`}
-                  >
-                    {t.vrView}
-                  </button>
                 </div>
 
                 {/* Controls depending on mode */}
                 {blueprintMode === 'cad' ? (
-                  <div className="inline-flex items-center gap-1 rounded-xl p-1 bg-white border border-slate-200 shadow-2xs">
+                  <div className="inline-flex items-center justify-center gap-1 rounded-xl p-1 bg-white border border-slate-200 shadow-2xs w-full sm:w-auto">
                     <button
                       onClick={handleZoomIn}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      className="p-2 sm:p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer flex-1 sm:flex-initial flex items-center justify-center"
                       title={t.zoomIn}
                       aria-label={t.zoomIn}
                     >
@@ -986,7 +951,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     </button>
                     <button
                       onClick={handleZoomOut}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      className="p-2 sm:p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer flex-1 sm:flex-initial flex items-center justify-center"
                       title={t.zoomOut}
                       aria-label={t.zoomOut}
                     >
@@ -994,7 +959,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     </button>
                     <button
                       onClick={handleResetZoom}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      className="p-2 sm:p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer flex-1 sm:flex-initial flex items-center justify-center"
                       title={t.resetZoom}
                       aria-label={t.resetZoom}
                     >
@@ -1002,27 +967,17 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     </button>
                     <button
                       onClick={() => setIsBlueprintFullscreen(true)}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      className="p-2 sm:p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer flex-1 sm:flex-initial flex items-center justify-center"
                       title={t.fullscreen}
                       aria-label={t.fullscreen}
                     >
                       <Maximize2 className="w-4 h-4" />
                     </button>
                   </div>
-                ) : blueprintMode === 'specs' ? (
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-2xs text-xs font-mono text-slate-600">
+                ) : (
+                  <div className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-200 shadow-2xs text-xs font-mono text-slate-600 w-full sm:w-auto">
                     <Ruler className="w-3.5 h-3.5 text-[#2D3E8C]" strokeWidth={1.5} />
                     <span>{rooms.length} {isRtl ? 'مناطق معمارية' : 'Programmed Nodes'}</span>
-                  </div>
-                ) : (
-                  <div className="inline-flex items-center gap-2">
-                    <button
-                      onClick={() => setIsVirtualTourOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#E8922D] hover:bg-[#d47f20] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-                    >
-                      <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.5} />
-                      <span>{isRtl ? 'ملء الشاشة 3D' : 'Fullscreen VR'}</span>
-                    </button>
                   </div>
                 )}
               </div>
@@ -1117,7 +1072,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   </div>
                 )}
               </div>
-            ) : blueprintMode === 'specs' ? (
+            ) : (
               /* ============================================================== */
               /* 2. SPATIAL PROGRAMMING & VOLUMETRIC SCHEDULE MATRIX             */
               /* ============================================================== */
@@ -1340,17 +1295,6 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                     </span>
                   </div>
                 </div>
-              </div>
-            ) : (
-              /* ============================================================== */
-              /* 3. 3D VR INTERIOR WALKTHROUGH WITH RESIDENT OBSERVER           */
-              /* ============================================================== */
-              <div className="rounded-2xl sm:rounded-3xl border-2 border-[#2D3E8C]/40 shadow-2xl overflow-hidden bg-[#080D1A] mb-6">
-                <PropertyVrTourScene
-                  property={property}
-                  lang={lang}
-                  className="h-[520px] w-full"
-                />
               </div>
             )}
           </section>
@@ -1662,28 +1606,6 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 ))}
               </div>
             )}
-          </div>
-        )}
-
-        {/* ============================================================== */}
-        {/* MODAL: 360° SPATIAL VIRTUAL TOUR SIMULATOR                     */}
-        {/* ============================================================== */}
-        {isVirtualTourOpen && (
-          <div
-            className="fixed inset-0 z-60 bg-black/95 backdrop-blur-xl flex flex-col p-2 sm:p-6 text-white animate-in fade-in duration-200"
-            role="dialog"
-            aria-modal="true"
-          >
-            <div className="flex-1 w-full h-full relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/15">
-              <PropertyVrTourScene
-                property={property}
-                initialNodeIndex={tourViewIndex}
-                onClose={() => setIsVirtualTourOpen(false)}
-                lang={lang}
-                isModal={true}
-                className="w-full h-full rounded-2xl sm:rounded-3xl"
-              />
-            </div>
           </div>
         )}
     </div>

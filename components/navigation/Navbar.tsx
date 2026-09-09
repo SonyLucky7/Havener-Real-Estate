@@ -6,7 +6,6 @@ import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { Button } from '@/components/ui/Button';
 import { BrandLogo } from '@/components/ui/BrandLogo';
-import { SocialLinks } from '@/components/ui/SocialLinks';
 import { cn } from '@/lib/utils';
 
 interface NavbarProps {
@@ -166,7 +165,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onLanguageToggle}
               className={cn(
-                'px-2.5 py-1.5 rounded-full text-xs font-bold border transition-colors cursor-pointer active:scale-95',
+                'h-9 px-3 rounded-full text-xs font-bold border transition-colors cursor-pointer active:scale-95 inline-flex items-center justify-center',
                 isOverHero
                   ? 'bg-white/10 text-white border-white/20 hover:bg-white/20'
                   : 'bg-slate-100 text-[#2D3E8C] border-slate-200 hover:bg-slate-200'
@@ -179,7 +178,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
-                'p-2 rounded-full border transition-colors focus:outline-none cursor-pointer active:scale-95',
+                'h-9 w-9 rounded-full border transition-colors focus:outline-none cursor-pointer active:scale-95 inline-flex items-center justify-center',
                 isOverHero
                   ? 'bg-white/10 text-white border-white/20 hover:bg-white/20'
                   : 'bg-slate-100 text-slate-800 border-slate-200 hover:text-[#2D3E8C] hover:bg-slate-200'
@@ -187,9 +186,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label={isMobileMenuOpen ? 'Close Menu' : 'Open Menu'}
             >
               {isMobileMenuOpen ? (
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               ) : (
-                <Menu className="w-5 h-5" />
+                <Menu className="w-4 h-4" />
               )}
             </button>
           </div>
@@ -238,13 +237,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Drawer Footer Actions */}
           <div className="flex flex-col gap-3.5 p-6 sm:p-8 border-t border-white/10 bg-white/5 backdrop-blur-xl">
-            {/* Quick Contact Buttons */}
-            <div className="grid grid-cols-2 gap-2.5">
+            {/* Quick Contact Buttons (Cohesive iOS Pills) */}
+            <div className="grid grid-cols-2 gap-3">
               <a
                 href="https://wa.me/97140000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white transition-colors shadow-2xs"
+                className="h-11 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-semibold text-white inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-2xs"
               >
                 <MessageCircle className="w-4 h-4 text-emerald-400" strokeWidth={1.5} />
                 <span>WhatsApp</span>
@@ -252,7 +251,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <a
                 href="tel:+97140000000"
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-white transition-colors shadow-2xs"
+                className="h-11 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-semibold text-white inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-2xs"
               >
                 <Phone className="w-4 h-4 text-[#E8922D]" strokeWidth={1.5} />
                 <span>{lang === 'ar' ? 'اتصال مباشر' : 'Direct Call'}</span>
@@ -262,8 +261,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Consultation CTA */}
             <Button
               variant="gold"
-              size="lg"
-              className="w-full rounded-full"
+              size="md"
+              className="w-full h-12 rounded-full text-xs sm:text-sm font-bold tracking-wide shadow-lg justify-center"
               isRtl={isRtl}
               onClick={() => {
                 setIsMobileMenuOpen(false);
@@ -272,11 +271,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               {t.nav.consultationCTA}
             </Button>
-
-            {/* Social Icons (Instagram, LinkedIn, X, YouTube, Facebook) */}
-            <div className="flex justify-center pt-2 pb-1">
-              <SocialLinks variant="glass" size="sm" />
-            </div>
 
             <div className="flex items-center justify-between text-xs text-slate-400 pt-1 font-medium">
               <span>{t.contact.directContact.officeValue}</span>

@@ -154,13 +154,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap items-center gap-4"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto max-w-md sm:max-w-none"
         >
           {/* Primary CTA */}
           <a
             href="#properties"
             onClick={handleScrollToProperties}
-            className="group px-7 py-3.5 rounded-full bg-white text-[#0A0E24] hover:bg-slate-100 font-semibold text-xs tracking-wider uppercase transition-all shadow-xl hover:shadow-2xl active:scale-[0.98] inline-flex items-center gap-2 cursor-pointer"
+            className="group h-12 px-7 rounded-full bg-white text-[#0A0E24] hover:bg-slate-100 font-semibold text-xs tracking-wider uppercase transition-all shadow-xl hover:shadow-2xl active:scale-[0.98] inline-flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
           >
             <span>{t.hero.primaryCTA}</span>
             <ArrowDown className="w-3.5 h-3.5 text-[#0A0E24] transition-transform group-hover:translate-y-0.5" strokeWidth={2} />
@@ -169,7 +169,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Secondary CTA */}
           <button
             onClick={() => onOpenConsultation(activeProperty.name[lang])}
-            className="group px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs tracking-wider uppercase backdrop-blur-md transition-all active:scale-[0.98] inline-flex items-center gap-2 cursor-pointer"
+            className="group h-12 px-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs tracking-wider uppercase backdrop-blur-md transition-all active:scale-[0.98] inline-flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
           >
             <span>{t.hero.secondaryCTA}</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={1.5} />
