@@ -20,55 +20,22 @@ export const RevealText: React.FC<RevealTextProps> = ({
   delay = 0,
   as = 'h1',
 }) => {
-  const words = text.split(' ');
-
-  const container: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.04,
-        delayChildren: delay,
-      },
-    },
-  };
-
-  const child: Variants = {
-    hidden: {
-      opacity: 0,
-      y: 28,
-      scale: 0.96,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.7,
-        ease: [0.16, 1, 0.3, 1],
-      },
-    },
-  };
-
   const Component = motion[as] as typeof motion.div;
 
   return (
     <Component
-      variants={container}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-60px' }}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{
+        duration: 0.6,
+        delay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      style={{ willChange: 'opacity, transform', transform: 'translateZ(0)' }}
       className={className}
     >
-      {words.map((word, index) => (
-        <motion.span
-          key={index}
-          variants={child}
-          className="inline-block mr-[0.24em] last:mr-0"
-        >
-          {word}
-        </motion.span>
-      ))}
+      {text}
     </Component>
   );
 };
@@ -101,6 +68,7 @@ export const PopIn: React.FC<PopInProps> = ({
         delay,
         ease: [0.16, 1, 0.3, 1],
       }}
+      style={{ willChange: 'opacity, transform', transform: 'translateZ(0)' }}
       className={className}
     >
       {children}
@@ -155,7 +123,7 @@ export const StaggerItem: React.FC<{
   };
 
   return (
-    <motion.div variants={item} className={className}>
+    <motion.div variants={item} style={{ willChange: 'opacity, transform' }} className={className}>
       {children}
     </motion.div>
   );
@@ -183,7 +151,7 @@ export const Parallax: React.FC<ParallaxProps> = ({
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.div style={{ y }} className="w-full h-full">
+      <motion.div style={{ y, willChange: 'transform', transform: 'translateZ(0)' }} className="w-full h-full">
         {children}
       </motion.div>
     </div>

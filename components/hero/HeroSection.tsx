@@ -38,10 +38,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     ];
 
     const fallback4kImages = [
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=3840&q=95',
-      'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=3840&q=95',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=3840&q=95',
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=3840&q=95',
+      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2048&q=80',
+      'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2048&q=80',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2048&q=80',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2048&q=80',
     ];
 
     return propertySlugs.map((slug, idx) => {
@@ -59,10 +59,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const activeItem = featuredResidences[activeIndex] || featuredResidences[0];
   const activeProperty = activeItem.property;
 
-  // Continuous Automatic Smooth Image Cycle (every 5 seconds, never paused by hover)
+  // Continuous Automatic Smooth Image Cycle (every 5 seconds, pauses when tab is hidden)
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % featuredResidences.length);
+      if (!document.hidden) {
+        setActiveIndex((prev) => (prev + 1) % featuredResidences.length);
+      }
     }, 5000);
 
     return () => clearInterval(timer);
@@ -88,10 +90,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <AnimatePresence mode="sync">
           <motion.div
             key={activeItem.ultra4kImage}
-            initial={{ opacity: 0, scale: 1.06 }}
+            initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1.0 }}
-            exit={{ opacity: 0, transition: { duration: 1.4, ease: 'easeInOut' } }}
-            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, transition: { duration: 1.2, ease: 'easeInOut' } }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{ willChange: 'opacity, transform', transform: 'translateZ(0)' }}
             className="absolute inset-0 w-full h-full"
           >
             <Image
@@ -99,7 +102,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               alt={activeProperty.name[lang] || 'Dubai Luxury Property'}
               fill
               priority
-              quality={95}
+              quality={82}
               sizes="100vw"
               className="object-cover object-center"
             />

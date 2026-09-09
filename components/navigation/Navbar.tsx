@@ -26,41 +26,68 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
 
-  // Scroll and hero boundary detection
+  // High-performance scroll & hero boundary detection (Zero forced reflows during scroll)
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 20);
+    let ticking = false;
+    let cachedHeroBottom = window.innerHeight;
 
-      // Detect whether the viewport is still over the hero section
+    const measureHero = () => {
       const heroEl = document.getElementById('hero');
       if (heroEl) {
-        const heroBottom = heroEl.offsetTop + heroEl.offsetHeight;
-        setIsOverHero(scrollY < heroBottom - 80);
+        cachedHeroBottom = heroEl.offsetTop + heroEl.offsetHeight;
       } else {
-        setIsOverHero(scrollY < window.innerHeight * 0.85);
+        cachedHeroBottom = window.innerHeight;
       }
+    };
 
-      // Scrollspy active section detection
-      const sections = ['hero', 'properties', 'investment', 'why-dubai', 'about', 'services', 'contact'];
-      const scrollPos = scrollY + 140;
+    measureHero();
+    window.addEventListener('resize', measureHero, { passive: true });
 
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(sectionId);
-            break;
-          }
-        }
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const nextScrolled = scrollY > 20;
+          const nextOverHero = scrollY < cachedHeroBottom - 80;
+
+          setIsScrolled((prev) => (prev !== nextScrolled ? nextScrolled : prev));
+          setIsOverHero((prev) => (prev !== nextOverHero ? nextOverHero : prev));
+
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // Asynchronous IntersectionObserver for section scrollspy (runs off main thread)
+    const sections = ['hero', 'properties', 'investment', 'why-dubai', 'about', 'services', 'contact'];
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0,
+      }
+    );
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) sectionObserver.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', measureHero);
+      sectionObserver.disconnect();
+    };
   }, []);
 
   // Prevent background scrolling when mobile menu is open
