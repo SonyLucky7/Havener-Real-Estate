@@ -102,7 +102,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               alt={activeProperty.name[lang] || 'Dubai Luxury Property'}
               fill
               priority
-              quality={82}
+              quality={75}
               sizes="100vw"
               className="object-cover object-center"
             />
