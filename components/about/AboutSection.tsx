@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
-import { ShieldCheck, Compass, Clock, TrendingUp } from 'lucide-react';
+import { Compass, Clock, ShieldCheck, TrendingUp } from 'lucide-react';
 import { RevealText, PopIn, StaggerGroup, StaggerItem, Parallax } from '@/components/ui/MotionPrimitives';
 import { motion } from 'motion/react';
 
@@ -16,10 +16,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
   const t = TRANSLATIONS[lang].about;
 
   const icons = [
-    <Compass key="0" className="w-4 h-4 text-[#2D3E8C]" />,
-    <Clock key="1" className="w-4 h-4 text-[#E8922D]" />,
-    <ShieldCheck key="2" className="w-4 h-4 text-[#2D3E8C]" />,
-    <TrendingUp key="3" className="w-4 h-4 text-[#E8922D]" />,
+    <Compass key="0" className="w-4 h-4 text-[#0A0E24]" strokeWidth={1.5} />,
+    <Clock key="1" className="w-4 h-4 text-[#0A0E24]" strokeWidth={1.5} />,
+    <ShieldCheck key="2" className="w-4 h-4 text-[#0A0E24]" strokeWidth={1.5} />,
+    <TrendingUp key="3" className="w-4 h-4 text-[#0A0E24]" strokeWidth={1.5} />,
   ];
 
   return (
@@ -70,7 +70,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ lang }) => {
                     className="p-5 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 shadow-xs hover:shadow-md transition-all group h-full"
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="p-2 rounded-xl bg-slate-100 group-hover:bg-[#2D3E8C]/10 transition-colors">
+                      <span className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A0E24] shrink-0">
                         {icons[idx]}
                       </span>
                       <h3 className="text-sm font-bold tracking-wide text-[#0A0E24]">

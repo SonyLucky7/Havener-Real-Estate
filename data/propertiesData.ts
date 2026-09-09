@@ -1,13 +1,12 @@
-import { Property } from '@/lib/types';
+import { Property, BlueprintRoom } from '@/lib/types';
 
-interface BlueprintRoom {
-  name: string;
-  dims: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  accent?: boolean;
+function escapeXml(str: string = ''): string {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 function buildBlueprintSvg(config: {
@@ -19,21 +18,51 @@ function buildBlueprintSvg(config: {
 }): string {
   const roomsSvg = config.rooms
     .map((r) => {
-      const fill = r.accent ? 'rgba(232, 146, 45, 0.14)' : 'rgba(45, 62, 140, 0.18)';
-      const stroke = r.accent ? '#E8922D' : '#3B82F6';
-      const strokeWidth = r.accent ? '2' : '1.5';
-      const textFill = r.accent ? '#FBBF24' : '#93C5FD';
+      // Unified architectural CAD blueprint palette matching Havener Navy (#2D3E8C)
+      const fill = 'rgba(45, 62, 140, 0.22)';
+      const stroke = '#60A5FA';
+      const strokeWidth = r.accent ? '1.8' : '1.4';
+      const cornerStroke = r.accent ? '#E8922D' : '#93C5FD';
+      const cornerWidth = r.accent ? '1.5' : '1';
+      const textFill = '#F8FAFC';
       const centerX = r.x + r.w / 2;
       const centerY = r.y + r.h / 2;
+
+      // Intelligent text layout to prevent overflow on narrow or dense rooms
+      const isLongText = r.name.length > 20 || (r.w < 220 && r.name.length > 16);
+      let textSvg = '';
+
+      if (isLongText && r.name.includes(' & ') && r.h >= 60) {
+        const [p1, p2] = r.name.split(' & ');
+        textSvg = `
+        <text x="${centerX}" y="${centerY - 10}" font-family="monospace, sans-serif" font-size="10" font-weight="600" fill="${textFill}" text-anchor="middle" letter-spacing="0.5">${escapeXml(p1)}</text>
+        <text x="${centerX}" y="${centerY + 3}" font-family="monospace, sans-serif" font-size="10" font-weight="600" fill="${textFill}" text-anchor="middle" letter-spacing="0.5">&amp; ${escapeXml(p2)}</text>
+        <text x="${centerX}" y="${centerY + 17}" font-family="monospace, sans-serif" font-size="8.5" fill="rgba(147, 197, 253, 0.85)" text-anchor="middle" letter-spacing="0.5">${escapeXml(r.dims)}</text>`;
+      } else if (isLongText && r.name.includes(' / ') && r.h >= 60) {
+        const [p1, p2] = r.name.split(' / ');
+        textSvg = `
+        <text x="${centerX}" y="${centerY - 10}" font-family="monospace, sans-serif" font-size="10" font-weight="600" fill="${textFill}" text-anchor="middle" letter-spacing="0.5">${escapeXml(p1)}</text>
+        <text x="${centerX}" y="${centerY + 3}" font-family="monospace, sans-serif" font-size="10" font-weight="600" fill="${textFill}" text-anchor="middle" letter-spacing="0.5">/ ${escapeXml(p2)}</text>
+        <text x="${centerX}" y="${centerY + 17}" font-family="monospace, sans-serif" font-size="8.5" fill="rgba(147, 197, 253, 0.85)" text-anchor="middle" letter-spacing="0.5">${escapeXml(r.dims)}</text>`;
+      } else if (r.h <= 45) {
+        textSvg = `
+        <text x="${centerX}" y="${centerY - 2}" font-family="monospace, sans-serif" font-size="9" font-weight="600" fill="${textFill}" text-anchor="middle" letter-spacing="0.6">${escapeXml(r.name)}</text>
+        <text x="${centerX}" y="${centerY + 10}" font-family="monospace, sans-serif" font-size="8" fill="rgba(147, 197, 253, 0.85)" text-anchor="middle" letter-spacing="0.5">${escapeXml(r.dims)}</text>`;
+      } else {
+        const fontSize = r.w < 200 && r.name.length > 18 ? '9.5' : '10.5';
+        textSvg = `
+        <text x="${centerX}" y="${centerY - 4}" font-family="monospace, sans-serif" font-size="${fontSize}" font-weight="600" fill="${textFill}" text-anchor="middle" letter-spacing="0.6">${escapeXml(r.name)}</text>
+        <text x="${centerX}" y="${centerY + 14}" font-family="monospace, sans-serif" font-size="9" fill="rgba(147, 197, 253, 0.85)" text-anchor="middle" letter-spacing="0.5">${escapeXml(r.dims)}</text>`;
+      }
+
       return `
       <g>
-        <rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" rx="3" />
-        <line x1="${r.x + 8}" y1="${r.y + 8}" x2="${r.x + 18}" y2="${r.y + 8}" stroke="${stroke}" stroke-width="1" />
-        <line x1="${r.x + 8}" y1="${r.y + 8}" x2="${r.x + 8}" y2="${r.y + 18}" stroke="${stroke}" stroke-width="1" />
-        <line x1="${r.x + r.w - 8}" y1="${r.y + r.h - 8}" x2="${r.x + r.w - 18}" y2="${r.y + r.h - 8}" stroke="${stroke}" stroke-width="1" />
-        <line x1="${r.x + r.w - 8}" y1="${r.y + r.h - 8}" x2="${r.x + r.w - 8}" y2="${r.y + r.h - 18}" stroke="${stroke}" stroke-width="1" />
-        <text x="${centerX}" y="${centerY - 4}" font-family="monospace, sans-serif" font-size="11" font-weight="600" fill="${textFill}" text-anchor="middle" letter-spacing="0.8">${r.name}</text>
-        <text x="${centerX}" y="${centerY + 14}" font-family="monospace, sans-serif" font-size="9" fill="rgba(147, 197, 253, 0.75)" text-anchor="middle" letter-spacing="0.5">${r.dims}</text>
+        <rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" rx="2" />
+        <line x1="${r.x + 6}" y1="${r.y + 6}" x2="${r.x + 16}" y2="${r.y + 6}" stroke="${cornerStroke}" stroke-width="${cornerWidth}" />
+        <line x1="${r.x + 6}" y1="${r.y + 6}" x2="${r.x + 6}" y2="${r.y + 16}" stroke="${cornerStroke}" stroke-width="${cornerWidth}" />
+        <line x1="${r.x + r.w - 6}" y1="${r.y + r.h - 6}" x2="${r.x + r.w - 16}" y2="${r.y + r.h - 6}" stroke="${cornerStroke}" stroke-width="${cornerWidth}" />
+        <line x1="${r.x + r.w - 6}" y1="${r.y + r.h - 6}" x2="${r.x + r.w - 6}" y2="${r.y + r.h - 16}" stroke="${cornerStroke}" stroke-width="${cornerWidth}" />
+        ${textSvg}
       </g>`;
     })
     .join('');
@@ -41,24 +70,24 @@ function buildBlueprintSvg(config: {
   const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="100%" height="100%">
   <defs>
-    <pattern id="grid-20-${config.sheetNo}" width="20" height="20" patternUnits="userSpaceOnUse">
-      <line x1="0" y1="0" x2="20" y2="0" stroke="rgba(59, 130, 246, 0.08)" stroke-width="0.5" />
-      <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(59, 130, 246, 0.08)" stroke-width="0.5" />
+    <pattern id="grid-20-${escapeXml(config.sheetNo)}" width="20" height="20" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="20" y2="0" stroke="rgba(45, 62, 140, 0.15)" stroke-width="0.5" />
+      <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(45, 62, 140, 0.15)" stroke-width="0.5" />
     </pattern>
-    <pattern id="grid-100-${config.sheetNo}" width="100" height="100" patternUnits="userSpaceOnUse">
-      <rect width="100" height="100" fill="url(#grid-20-${config.sheetNo})" />
-      <line x1="0" y1="0" x2="100" y2="0" stroke="rgba(59, 130, 246, 0.18)" stroke-width="1" />
-      <line x1="0" y1="0" x2="0" y2="100" stroke="rgba(59, 130, 246, 0.18)" stroke-width="1" />
+    <pattern id="grid-100-${escapeXml(config.sheetNo)}" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="url(#grid-20-${escapeXml(config.sheetNo)})" />
+      <line x1="0" y1="0" x2="100" y2="0" stroke="rgba(45, 62, 140, 0.35)" stroke-width="1" />
+      <line x1="0" y1="0" x2="0" y2="100" stroke="rgba(45, 62, 140, 0.35)" stroke-width="1" />
     </pattern>
   </defs>
 
   <!-- Background -->
   <rect width="1000" height="700" fill="#080D1A" />
-  <rect width="1000" height="700" fill="url(#grid-100-${config.sheetNo})" />
+  <rect width="1000" height="700" fill="url(#grid-100-${escapeXml(config.sheetNo)})" />
 
   <!-- Outer Technical Border -->
   <rect x="20" y="20" width="960" height="660" fill="none" stroke="#2D3E8C" stroke-width="1.5" />
-  <rect x="25" y="25" width="950" height="650" fill="none" stroke="rgba(59, 130, 246, 0.3)" stroke-width="0.75" />
+  <rect x="25" y="25" width="950" height="650" fill="none" stroke="rgba(96, 165, 250, 0.25)" stroke-width="0.75" />
 
   <!-- CAD Registration Crosshairs -->
   <g stroke="#E8922D" stroke-width="1">
@@ -70,22 +99,22 @@ function buildBlueprintSvg(config: {
 
   <!-- Compass Rose -->
   <g transform="translate(920, 65)">
-    <circle cx="0" cy="0" r="24" fill="none" stroke="rgba(59, 130, 246, 0.4)" stroke-width="1" />
-    <circle cx="0" cy="0" r="18" fill="none" stroke="rgba(232, 146, 45, 0.3)" stroke-width="0.75" />
+    <circle cx="0" cy="0" r="24" fill="none" stroke="rgba(96, 165, 250, 0.35)" stroke-width="1" />
+    <circle cx="0" cy="0" r="18" fill="none" stroke="rgba(45, 62, 140, 0.4)" stroke-width="0.75" />
     <polygon points="0,-22 5,-3 0,0 -5,-3" fill="#E8922D" />
-    <polygon points="0,22 5,3 0,0 -5,3" fill="rgba(59, 130, 246, 0.5)" />
-    <polygon points="22,0 3,5 0,0 3,-5" fill="rgba(59, 130, 246, 0.5)" />
-    <polygon points="-22,0 -3,5 0,0 -3,-5" fill="rgba(59, 130, 246, 0.5)" />
+    <polygon points="0,22 5,3 0,0 -5,3" fill="rgba(96, 165, 250, 0.5)" />
+    <polygon points="22,0 3,5 0,0 3,-5" fill="rgba(96, 165, 250, 0.5)" />
+    <polygon points="-22,0 -3,5 0,0 -3,-5" fill="rgba(96, 165, 250, 0.5)" />
     <text x="0" y="-26" font-family="monospace, sans-serif" font-size="10" font-weight="bold" fill="#E8922D" text-anchor="middle">N</text>
   </g>
 
-  <!-- Scale Bar & Coordinate Markers -->
+  <!-- Scale Bar and Coordinate Markers -->
   <g transform="translate(45, 650)">
     <line x1="0" y1="0" x2="160" y2="0" stroke="#93C5FD" stroke-width="1.5" />
     <line x1="0" y1="-5" x2="0" y2="5" stroke="#93C5FD" stroke-width="1.5" />
-    <line x1="40" y1="-3" x2="40" y2="3" stroke="#93C5FD" stroke-width="1" />
+    <line x1="40" y1="-3" x2="40" y2="3" stroke="#93C5FD" stroke-width="1.5" />
     <line x1="80" y1="-5" x2="80" y2="5" stroke="#93C5FD" stroke-width="1.5" />
-    <line x1="120" y1="-3" x2="120" y2="3" stroke="#93C5FD" stroke-width="1" />
+    <line x1="120" y1="-3" x2="120" y2="3" stroke="#93C5FD" stroke-width="1.5" />
     <line x1="160" y1="-5" x2="160" y2="5" stroke="#93C5FD" stroke-width="1.5" />
     <text x="0" y="14" font-family="monospace, sans-serif" font-size="8" fill="rgba(147, 197, 253, 0.7)">0m</text>
     <text x="75" y="14" font-family="monospace, sans-serif" font-size="8" fill="rgba(147, 197, 253, 0.7)">10m</text>
@@ -107,25 +136,91 @@ function buildBlueprintSvg(config: {
   <!-- Title Block (Bottom Right) -->
   <g transform="translate(620, 580)">
     <rect width="345" height="85" fill="#0A1128" stroke="#2D3E8C" stroke-width="1.5" rx="2" />
-    <line x1="0" y1="32" x2="345" y2="32" stroke="rgba(59, 130, 246, 0.3)" stroke-width="1" />
-    <line x1="220" y1="32" x2="220" y2="85" stroke="rgba(59, 130, 246, 0.3)" stroke-width="1" />
+    <line x1="0" y1="32" x2="345" y2="32" stroke="rgba(45, 62, 140, 0.5)" stroke-width="1" />
+    <line x1="220" y1="32" x2="220" y2="85" stroke="rgba(45, 62, 140, 0.5)" stroke-width="1" />
     
     <text x="15" y="18" font-family="sans-serif" font-size="10" font-weight="bold" fill="#E8922D" letter-spacing="1.5">HAVENER PROPERTY DUBAI</text>
-    <text x="15" y="27" font-family="monospace, sans-serif" font-size="7.5" fill="rgba(147, 197, 253, 0.6)">ARCHITECTURAL SCHEMATICS &amp; SPECIFICATION</text>
-    <text x="330" y="20" font-family="monospace, sans-serif" font-size="9" font-weight="bold" fill="#3B82F6" text-anchor="end">${config.sheetNo}</text>
+    <text x="15" y="27" font-family="monospace, sans-serif" font-size="7.5" fill="rgba(147, 197, 253, 0.7)">ARCHITECTURAL SCHEMATICS &amp; SPECIFICATION</text>
+    <text x="330" y="20" font-family="monospace, sans-serif" font-size="9" font-weight="bold" fill="#60A5FA" text-anchor="end">${escapeXml(config.sheetNo)}</text>
     
-    <text x="15" y="47" font-family="sans-serif" font-size="10" font-weight="bold" fill="#FFFFFF">${config.title}</text>
-    <text x="15" y="60" font-family="monospace, sans-serif" font-size="8" fill="#93C5FD">${config.level}</text>
-    <text x="15" y="73" font-family="monospace, sans-serif" font-size="7.5" fill="rgba(147, 197, 253, 0.5)">STATUS: DLD APPROVED · SCHEMATIC DESIGN</text>
+    <text x="15" y="47" font-family="sans-serif" font-size="10" font-weight="bold" fill="#FFFFFF">${escapeXml(config.title)}</text>
+    <text x="15" y="60" font-family="monospace, sans-serif" font-size="8" fill="#93C5FD">${escapeXml(config.level)}</text>
+    <text x="15" y="73" font-family="monospace, sans-serif" font-size="7.5" fill="rgba(147, 197, 253, 0.6)">STATUS: DLD APPROVED · SCHEMATIC DESIGN</text>
     
-    <text x="230" y="48" font-family="monospace, sans-serif" font-size="8" fill="rgba(147, 197, 253, 0.6)">SCALE</text>
-    <text x="230" y="60" font-family="monospace, sans-serif" font-size="9" font-weight="bold" fill="#FFFFFF">${config.scale || '1:100 @ A1'}</text>
+    <text x="230" y="48" font-family="monospace, sans-serif" font-size="8" fill="rgba(147, 197, 253, 0.7)">SCALE</text>
+    <text x="230" y="60" font-family="monospace, sans-serif" font-size="9" font-weight="bold" fill="#FFFFFF">${escapeXml(config.scale || '1:100 @ A1')}</text>
     <text x="230" y="73" font-family="monospace, sans-serif" font-size="7.5" fill="#E8922D">REV 04.2026</text>
   </g>
 </svg>`.trim();
 
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
+
+export const PALM_CROWN_ROOMS: BlueprintRoom[] = [
+  { name: 'GRAND DOUBLE-HEIGHT FOYER', dims: '8.4m × 6.8m', x: 380, y: 350, w: 240, h: 140, zone: 'social', specs: '7.5m soaring clearance, bookmatched travertine portal, pivot bronze door', specsAr: 'ارتفاع 7.5 متر، بوابات ترافرتين، باب دخول برونزي محوري' },
+  { name: 'FORMAL OCEAN SALON & GALLERY', dims: '14.2m × 8.6m', x: 300, y: 170, w: 400, h: 160, zone: 'social', specs: 'Curved acoustic structural glass curtain, seamless threshold to beach deck', specsAr: 'واجهة زجاجية عازلة للصوت، إطلالة مباشرة وانسيابية على الشاطئ' },
+  { name: 'PRIMARY MASTER WING', dims: '10.5m × 7.2m', x: 80, y: 170, w: 200, h: 210, accent: true, zone: 'sanctuary', specs: 'Private dressing gallery, dual rain salons, cantilever plunge pool terrace', specsAr: 'جناح ملابس خاص، غرفتي استحمام مطرية، شرفة بمسبح خاص معلق' },
+  { name: 'CHEF SHOW KITCHEN & DINING', dims: '9.4m × 6.2m', x: 720, y: 170, w: 200, h: 170, zone: 'culinary', specs: 'Custom Poliform cabinetry, Gaggenau 400 series, marble prep island', specsAr: 'خزائن بوليفورم مخصصة، أجهزة غاغيناو 400، جزيرة تحضير رخامية' },
+  { name: 'CANTILEVER INFINITY LAP POOL', dims: '22.0m × 5.4m', x: 220, y: 65, w: 560, h: 80, accent: true, zone: 'exterior', specs: 'Volcanic basalt edge, saline filtration, sunken underwater loungers', specsAr: 'حواف حجر بركاني، نظام فلترة بالملح الطبيعي، مقاعد استجمام مائية غائرة' },
+  { name: 'PRIVATE BEACHFRONT DECK & JETTY', dims: '36.0m SHORELINE', x: 160, y: 18, w: 680, h: 36, zone: 'exterior', specs: 'Teak decking, private tender mooring slip, automated landscape shading', specsAr: 'أرضيات خشب تيك، مرسى خاص لليخوت، مظلات شمسية ذكية' },
+  { name: 'WELLNESS SPA & PRIVATE GYM', dims: '7.8m × 6.0m', x: 80, y: 400, w: 200, h: 140, zone: 'wellness', specs: 'Finnish cedar sauna, Himalayan salt thermal room, Technogym integration', specsAr: 'ساونا خشب أرز فنلندي، غرفة ملح هيمالايا حرارية، أجهزة تكنوجيم' },
+  { name: 'SERVICE SUITE & STAFF QUARTERS', dims: '8.2m × 5.6m', x: 720, y: 360, w: 200, h: 180, zone: 'service', specs: 'Ensuite dual staff bedrooms, dedicated commercial scullery & laundry', specsAr: 'جناحين للخدم مع حمامات خاصة، مطبخ خدمات تجاري ومغسلة مركزية' },
+];
+
+export const PALM_JEBEL_ALI_ROOMS: BlueprintRoom[] = [
+  { name: 'CENTRAL WATER COURTYARD', dims: '7.5m × 7.5m', x: 410, y: 330, w: 180, h: 160, accent: true, zone: 'social', specs: 'Reflective biophilic water body, open sky atrium, microclimate cooling', specsAr: 'مسطح مائي عاكس، فناء سماوي مفتوح، تبريد بيوفيلي للمناخ' },
+  { name: 'SEA-FACING GRAND LOUNGE', dims: '15.0m × 7.8m', x: 270, y: 165, w: 460, h: 145, zone: 'social', specs: 'Motorized pocket glass facade, uninterrupted cove horizon vistas', specsAr: 'واجهات زجاجية منزلقة آلية، إطلالات أفقية مفتوحة على الخليج' },
+  { name: 'COASTAL MASTER SUITE', dims: '9.6m × 6.8m', x: 70, y: 165, w: 180, h: 210, accent: true, zone: 'sanctuary', specs: 'Private sunrise loggia, Italian onyx vanity, walk-in couture gallery', specsAr: 'شرفة شروق شمس خاصة، مغاسل من حجر العقيق الإيطالي، خزانة كوتور' },
+  { name: 'GOURMET KITCHEN & OCEAN DINING', dims: '8.8m × 6.5m', x: 750, y: 165, w: 180, h: 165, zone: 'culinary', specs: 'Sub-Zero & Wolf suite, concealed chef back kitchen, 12-seat banquette', specsAr: 'أجهزة ساب-زيرو ووولف، مطبخ تحضير خلفي مخفي، طاولة تتسع لـ 12 شخصاً' },
+  { name: 'RADIAL OCEAN INFINITY POOL', dims: '24.0m × 5.0m', x: 210, y: 65, w: 580, h: 80, accent: true, zone: 'exterior', specs: 'Perimeter glass overflow edge, heated all-season thermal circulation', specsAr: 'حافة زجاجية فائضة، نظام تسخين ودوران حراري لكافة فصول السنة' },
+  { name: 'PRIVATE DUNE BEACH BOARDWALK', dims: '42.0m SHORELINE', x: 150, y: 18, w: 700, h: 34, zone: 'exterior', specs: 'Direct natural sand access, beach firepit, outdoor shower pavilion', specsAr: 'وصول مباشر للرمال الطبيعية، موقد نار شاطئي، جناح دش خارجي' },
+  { name: 'FAMILY MAJLIS & MEDIA SALON', dims: '8.4m × 6.2m', x: 70, y: 395, w: 210, h: 145, zone: 'social', specs: 'Acoustically calibrated timber paneling, 4K laser theater projection', specsAr: 'كسوة خشبية معالجة صوتياً، شاشة سينمائية ليزرية بدقة 4K' },
+  { name: '4-BAY VEHICLE GALLERY & STAFF', dims: '10.5m × 7.2m', x: 710, y: 350, w: 220, h: 190, zone: 'service', specs: 'Climate-controlled collector showcase, dedicated security office & ensuite', specsAr: 'معرض سيارات مكيف لهواة جمع المركبات، مكتب أمن مستقل وغرف للموظفين' },
+];
+
+export const DAMAC_ISLAND_ROOMS: BlueprintRoom[] = [
+  { name: 'BIOPHILIC ENTRY & ATRIUM', dims: '6.5m × 6.5m', x: 410, y: 340, w: 180, h: 150, zone: 'social', specs: 'Cascading vertical living garden, volcanic stepping stones, skylight', specsAr: 'حديقة رأسية متدرجة، أحجار بركانية مائية، قبة سماوية زجاجية' },
+  { name: 'OPEN RESORT LIVING PAVILION', dims: '13.5m × 7.2m', x: 300, y: 170, w: 400, h: 150, zone: 'social', specs: 'Frameless glass curtain opening to turquoise lagoon sands', specsAr: 'جدران زجاجية بدون إطارات تفتح مباشرة على رمال البحيرة الفيروزية' },
+  { name: 'LAGOON MASTER SUITE', dims: '8.4m × 6.4m', x: 80, y: 175, w: 200, h: 185, accent: true, zone: 'sanctuary', specs: 'Private waterfront terrace, freestanding stone soak tub, walk-in robes', specsAr: 'شرفة خاصة على الماء، حوض استحمام حجري مستقل، خزائن واسعة' },
+  { name: 'ISLAND SHOW KITCHEN', dims: '7.8m × 6.0m', x: 720, y: 175, w: 200, h: 150, zone: 'culinary', specs: 'Custom quartzite worktops, Miele appliances, breakfast bar', specsAr: 'أسطح كوارتزيت فاخرة، أجهزة ميلي الألمانية، طاولة إفطار مدمجة' },
+  { name: 'TURQUOISE LAGOON PLUNGE POOL', dims: '18.5m × 4.8m', x: 250, y: 65, w: 500, h: 85, accent: true, zone: 'exterior', specs: 'Zero-entry sand shelf, turquoise ceramic mosaics, swim-up bar', specsAr: 'مدخل رملي متدرج للمسبح، موزاييك سيراميك فيروزي، بار مائي' },
+  { name: 'SUNKEN FIRE PIT LOUNGE', dims: '5.5m × 5.5m', x: 380, y: 15, w: 240, h: 38, zone: 'exterior', specs: 'Integrated bioethanol hearth, weather-resistant luxury upholstery', specsAr: 'موقد نار بيو-إيثانول مدمج، مقاعد فاخرة مقاومة للعوامل الجوية' },
+  { name: 'WELLNESS SPA & STEAM PAVILION', dims: '6.8m × 5.2m', x: 80, y: 380, w: 200, h: 140, zone: 'wellness', specs: 'Aroma steam suite, cold plunge shower, massage therapy space', specsAr: 'غرفة بخار عطرية، دش غطس بارد، مساحة مخصصة لجلسات التدليك' },
+  { name: 'GUEST SUITE & STAFF QUARTERS', dims: '7.4m × 5.8m', x: 720, y: 345, w: 200, h: 175, zone: 'service', specs: 'Private side entrance, ensuite guest bedroom, housekeeper quarters', specsAr: 'مدخل جانبي خاص، جناح ضيوف بحمام مستقل، غرف لمدبرة المنزل' },
+];
+
+export const BUGATTI_RESIDENCES_ROOMS: BlueprintRoom[] = [
+  { name: 'HIGH-SPEED VEHICULAR CAR LIFT', dims: '6.0m × 4.2m', x: 420, y: 375, w: 160, h: 140, accent: true, zone: 'service', specs: 'Automated hydraulic vehicular elevator servicing top floor penthouse', specsAr: 'مصعد سيارات هيدروليكي فائق السرعة يصل مباشرة إلى البنتهاوس' },
+  { name: 'SUPERCAR IN-RESIDENCE GALLERY', dims: '11.0m × 6.5m', x: 300, y: 220, w: 400, h: 140, zone: 'social', specs: 'Climate-controlled glass display lounge for 2 collector supercars', specsAr: 'صالة عرض زجاجية مكيفة ومضاءة لسيارتين من فئة السوبركار' },
+  { name: 'RIVIERA SKY POOL TERRACE', dims: '20.0m × 5.2m', x: 200, y: 65, w: 600, h: 80, accent: true, zone: 'exterior', specs: 'Cantilevered glass swimming pool overlooking Dubai Water Canal', specsAr: 'مسبح زجاجي معلق يوفر إطلالات بانورامية على قناة دبي المائية' },
+  { name: 'GRAND MASTER SKY SUITE', dims: '10.2m × 7.5m', x: 70, y: 160, w: 210, h: 220, accent: true, zone: 'sanctuary', specs: 'Curved aerodynamic panoramic suite, custom French leather joinery', specsAr: 'جناح بانورامي بتصميم أيروديناميكي، لمسات جلدية فرنسية فاخرة' },
+  { name: 'BESPOKE DINING & SOMMELIER CELLAR', dims: '9.0m × 6.4m', x: 720, y: 160, w: 210, h: 180, zone: 'culinary', specs: 'Temperature-zoned 500-bottle glass cellar, sculptural marble table', specsAr: 'قبو زجاجي يتسع لـ 500 زجاجة، طاولة طعام رخامية منحوتة' },
+  { name: 'CANTILEVER CANAL VIEW POOL', dims: '12.0m × 3.5m', x: 240, y: 15, w: 340, h: 36, accent: true, zone: 'exterior', specs: 'Transparent bottom glass section, fiber-optic night illumination', specsAr: 'أرضية زجاجية شفافة للمسبح، إضاءة ليلية بالألياف الضوئية' },
+  { name: 'PRIVATE SPA & CRYO SUITE', dims: '7.5m × 5.6m', x: 70, y: 400, w: 210, h: 130, zone: 'wellness', specs: 'Whole-body cryotherapy chamber, hydro-massage tub, thermal lounge', specsAr: 'غرفة علاج بالتبريد الكامل للجسم، حوض تدليك مائي، مقاعد استرخاء' },
+  { name: 'BUTLER SERVICE & CONCIERGE HUB', dims: '8.0m × 6.0m', x: 720, y: 360, w: 210, h: 160, zone: 'service', specs: 'Dedicated pantry, 24/7 butler prep station, private staff ensuite', specsAr: 'مطبخ تحضير خاص، محطة خدمة على مدار الساعة، جناح مستقل للمساعدين' },
+];
+
+export const DOWNTOWN_SKY_HORIZON_ROOMS: BlueprintRoom[] = [
+  { name: 'FOYER & PRIVATE ELEVATOR LOBBY', dims: '5.6m × 4.8m', x: 420, y: 390, w: 160, h: 130, zone: 'social', specs: 'Direct biometric high-speed elevator access, bespoke art vestibule', specsAr: 'مصعد خاص مباشر بتقنية البصمة الحيوية، بهو مخصص للأعمال الفنية' },
+  { name: 'BURJ KHALIFA PANORAMIC SALON', dims: '14.0m × 7.6m', x: 290, y: 195, w: 420, h: 175, accent: true, zone: 'social', specs: 'Triple-height floor-to-ceiling glass framing Burj Khalifa & Fountain', specsAr: 'واجهات زجاجية بارتفاع ثلاثة طوابق تطل على برج خليفة ونافورة دبي' },
+  { name: 'CONTINUOUS SKYLINE VIEW LOGGIA', dims: '24.0m CURVED BALCONY', x: 170, y: 55, w: 660, h: 80, accent: true, zone: 'exterior', specs: 'Curved structural glass balustrades with 270° unobstructed city views', specsAr: 'حواجز زجاجية منحنية بإطلالات بانورامية مفتوحة بزاوية 270 درجة' },
+  { name: 'EXECUTIVE MASTER CORNER SUITE', dims: '8.6m × 6.8m', x: 70, y: 180, w: 200, h: 200, accent: true, zone: 'sanctuary', specs: 'Dual corner exposure, walk-in dressing suite, marble ensuite spa', specsAr: 'إطلالة مزدوجة على زاويتين، غرفة ملابس رحبة، حمام رخامي فاخر' },
+  { name: 'POLIFORM SHOW KITCHEN & BAR', dims: '7.8m × 6.2m', x: 730, y: 195, w: 200, h: 160, zone: 'culinary', specs: 'Italian lacquer cabinetry, Sub-Zero appliances, champagne bar', specsAr: 'خزائن إيطالية مطلية، أجهزة ساب-زيرو، ركن مشروبات أنيق' },
+  { name: 'SUNSET CANTILEVERED GLASS POD', dims: '8.0m × 3.2m', x: 320, y: 14, w: 360, h: 36, zone: 'exterior', specs: 'Projecting glass observation pod suspended 220m above ground', specsAr: 'كبسولة مراقبة زجاجية معلقة في الهواء على ارتفاع 220 متراً' },
+  { name: 'PRIVATE STUDY / GUEST BEDROOM', dims: '6.8m × 5.2m', x: 70, y: 400, w: 200, h: 130, zone: 'sanctuary', specs: 'Integrated acoustic soundproofing, bespoke millwork desk & shelving', specsAr: 'عزل صوتي متطور، مكتب وخزائن خشبية مصممة خصيصاً' },
+  { name: 'UTILITY & INTEGRATED SMART HUB', dims: '5.4m × 4.2m', x: 730, y: 390, w: 200, h: 140, zone: 'service', specs: 'Crestron home automation server rack, laundry & back storage', specsAr: 'خوادم نظام كريسترون للمنازل الذكية، غرفة غسيل ومستودع تخزين' },
+];
+
+export const AL_MARJAN_ROOMS: BlueprintRoom[] = [
+  { name: 'DUAL-KEY ENTRY VESTIBULE', dims: '5.2m × 4.5m', x: 420, y: 390, w: 160, h: 130, zone: 'social', specs: 'Keyless NFC hospitality lock, refrigerated bar & espresso bar', specsAr: 'قفل ذكي بدون مفتاح، ركن تحضير قهوة وثلاجة مشروبات مدمجة' },
+  { name: 'OCEANFRONT RESORT SALON', dims: '12.8m × 7.2m', x: 290, y: 195, w: 420, h: 175, accent: true, zone: 'social', specs: 'Sliding acoustic glass wall connecting directly to ocean balcony', specsAr: 'واجهة زجاجية منزلقة عازلة للصوت تتصل مباشرة بالشرفة البحرية' },
+  { name: 'GULF HORIZON CURVED TERRACE', dims: '22.0m GLASS BALCONY', x: 180, y: 55, w: 640, h: 80, accent: true, zone: 'exterior', specs: 'Deep shaded terrace with views of Wynn gaming resort and marina', specsAr: 'شرفة واسعة مظللة تطل على منتجع وين الترفيهي ومرسى اليخوت' },
+  { name: 'MARITIME MASTER SUITE', dims: '7.8m × 6.4m', x: 80, y: 190, w: 190, h: 190, accent: true, zone: 'sanctuary', specs: 'Wake-up Arabian Gulf water views, king plush platform, dressing bay', specsAr: 'إطلالات صباحية على مياه الخليج، سرير كينغ، ركن مخصص للملابس' },
+  { name: 'LOCK-OFF HOSPITALITY STUDIO', dims: '7.6m × 5.8m', x: 730, y: 195, w: 190, h: 170, zone: 'sanctuary', specs: 'Autonomous rental studio key with private kitchenette & bath', specsAr: 'استوديو مستقل للإيجار الفندقي مع مطبخ تحضيري وحمام خاص' },
+  { name: 'SUN LOUNGER PLUNGE TERRACE', dims: '10.5m × 3.4m', x: 330, y: 15, w: 340, h: 36, zone: 'exterior', specs: 'Cantilever plunge pool & teak daybed platform facing sunset', specsAr: 'مسبح غطس معلق ومنصة استرخاء من خشب التيك تواجه الغروب' },
+  { name: 'WELLNESS ENSUITE & SOAK TUB', dims: '6.4m × 4.8m', x: 80, y: 400, w: 190, h: 130, zone: 'wellness', specs: 'Over-tub glass window with ocean horizon sightline, double vanities', specsAr: 'نافذة زجاجية فوق حوض الاستحمام تطل على الأفق البحري، مغاسل مزدوجة' },
+  { name: 'SECURE OWNER STORAGE & PANTRY', dims: '6.5m × 4.5m', x: 730, y: 385, w: 190, h: 135, zone: 'service', specs: 'Biometrically locked owner lockoff closet for short-term rental management', specsAr: 'خزانة مقفلة ببصمة المالك مخصصة لإدارة الإيجار السياحي القصير' },
+];
 
 export const PROPERTIES_DATA: Property[] = [
   {
@@ -214,20 +309,14 @@ export const PROPERTIES_DATA: Property[] = [
       ar: 'الهندسة المعمارية، التصميم الداخلي وتنسيق الحدائق',
     },
     mapUrl: 'https://maps.google.com/?q=Palm+Jumeirah+Dubai',
+    blueprintSheetNo: 'DWG-PC-01',
+    blueprintLevel: 'GROUND LEVEL & PRIVATE BEACHFRONT',
+    blueprintRooms: PALM_CROWN_ROOMS,
     blueprintUrl: buildBlueprintSvg({
       title: 'THE PALM CROWN RESIDENCE',
       sheetNo: 'DWG-PC-01',
       level: 'GROUND LEVEL & PRIVATE BEACHFRONT',
-      rooms: [
-        { name: 'GRAND DOUBLE-HEIGHT FOYER', dims: '8.4m × 6.8m', x: 380, y: 350, w: 240, h: 140 },
-        { name: 'FORMAL OCEAN SALON & GALLERY', dims: '14.2m × 8.6m', x: 300, y: 170, w: 400, h: 160 },
-        { name: 'PRIMARY MASTER WING', dims: '10.5m × 7.2m', x: 80, y: 170, w: 200, h: 210, accent: true },
-        { name: 'CHEF SHOW KITCHEN & DINING', dims: '9.4m × 6.2m', x: 720, y: 170, w: 200, h: 170 },
-        { name: 'CANTILEVER INFINITY LAP POOL', dims: '22.0m × 5.4m', x: 220, y: 65, w: 560, h: 80, accent: true },
-        { name: 'PRIVATE BEACHFRONT DECK & JETTY', dims: '36.0m SHORELINE', x: 160, y: 18, w: 680, h: 36 },
-        { name: 'WELLNESS SPA & PRIVATE GYM', dims: '7.8m × 6.0m', x: 80, y: 400, w: 200, h: 140 },
-        { name: 'SERVICE SUITE & STAFF QUARTERS', dims: '8.2m × 5.6m', x: 720, y: 360, w: 200, h: 180 },
-      ],
+      rooms: PALM_CROWN_ROOMS,
     }),
     architecturalNarrative: {
       en: 'Conceived as an organic dialogue between solid travertine volumes and the transparent horizon of the Arabian Gulf. The residence employs continuous floor-to-ceiling acoustic glass curtains recessed into monolithic fluted stone portals, creating uninterrupted sightlines from the double-height grand gallery directly to the water edge. Handcrafted basalt terraces float across dual cantilevered reflection pools, while interior spaces are sculpted with brushed bronze accents, bookmatched Calacatta marble, and automated solar-louvered pergolas engineered for optimal climate moderation.',
@@ -327,20 +416,14 @@ export const PROPERTIES_DATA: Property[] = [
       ar: 'المخطط الرئيسي، المفهوم الإنشائي والمعيشة الساحلية',
     },
     mapUrl: 'https://maps.google.com/?q=Palm+Jebel+Ali+Dubai',
+    blueprintSheetNo: 'DWG-PJA-02',
+    blueprintLevel: 'COVE SECTOR · OCEAN ESTATE LAYOUT',
+    blueprintRooms: PALM_JEBEL_ALI_ROOMS,
     blueprintUrl: buildBlueprintSvg({
       title: 'PALM JEBEL ALI OCEAN ESTATES',
       sheetNo: 'DWG-PJA-02',
       level: 'COVE SECTOR · OCEAN ESTATE LAYOUT',
-      rooms: [
-        { name: 'CENTRAL WATER COURTYARD', dims: '7.5m × 7.5m', x: 410, y: 330, w: 180, h: 160, accent: true },
-        { name: 'SEA-FACING GRAND LOUNGE', dims: '15.0m × 7.8m', x: 270, y: 165, w: 460, h: 145 },
-        { name: 'COASTAL MASTER SUITE', dims: '9.6m × 6.8m', x: 70, y: 165, w: 180, h: 210, accent: true },
-        { name: 'GOURMET KITCHEN & OCEAN DINING', dims: '8.8m × 6.5m', x: 750, y: 165, w: 180, h: 165 },
-        { name: 'RADIAL OCEAN INFINITY POOL', dims: '24.0m × 5.0m', x: 210, y: 65, w: 580, h: 80, accent: true },
-        { name: 'PRIVATE DUNE BEACH BOARDWALK', dims: '42.0m SHORELINE', x: 150, y: 18, w: 700, h: 34 },
-        { name: 'FAMILY MAJLIS & MEDIA SALON', dims: '8.4m × 6.2m', x: 70, y: 395, w: 210, h: 145 },
-        { name: '4-BAY VEHICLE GALLERY & STAFF', dims: '10.5m × 7.2m', x: 710, y: 350, w: 220, h: 190 },
-      ],
+      rooms: PALM_JEBEL_ALI_ROOMS,
     }),
     architecturalNarrative: {
       en: 'Pioneering Dubai’s next maritime paradigm on the newly shaped fronds of Palm Jebel Ali. The architectural scheme synthesizes curvilinear parametric canopies with natural coral-tone limestone and marine-grade brushed steel. The layout unfolds around a central water courtyard that naturally induces cross-ventilation, drawing sea breezes deep into private family lounges. Expansive shaded cantilevers shield the open-air entertainment decks, establishing an intimate threshold where private sands meet the tranquil azure waters.',
@@ -440,20 +523,14 @@ export const PROPERTIES_DATA: Property[] = [
       ar: 'العمارة المنتجعيه وتنسيق الحدائق الحيوية',
     },
     mapUrl: 'https://maps.google.com/?q=Damac+Islands+Dubailand+Dubai',
+    blueprintSheetNo: 'DWG-DI-03',
+    blueprintLevel: 'ISLAND CLUSTER · RESORT VILLA PLAN',
+    blueprintRooms: DAMAC_ISLAND_ROOMS,
     blueprintUrl: buildBlueprintSvg({
       title: 'DAMAC ISLAND BEACHFRONT VILLAS',
       sheetNo: 'DWG-DI-03',
       level: 'ISLAND CLUSTER · RESORT VILLA PLAN',
-      rooms: [
-        { name: 'BIOPHILIC ENTRY & ATRIUM', dims: '6.5m × 6.5m', x: 410, y: 340, w: 180, h: 150 },
-        { name: 'OPEN RESORT LIVING PAVILION', dims: '13.5m × 7.2m', x: 300, y: 170, w: 400, h: 150 },
-        { name: 'LAGOON MASTER SUITE', dims: '8.4m × 6.4m', x: 80, y: 175, w: 200, h: 185, accent: true },
-        { name: 'ISLAND SHOW KITCHEN', dims: '7.8m × 6.0m', x: 720, y: 175, w: 200, h: 150 },
-        { name: 'TURQUOISE LAGOON PLUNGE POOL', dims: '18.5m × 4.8m', x: 250, y: 65, w: 500, h: 85, accent: true },
-        { name: 'SUNKEN FIRE PIT LOUNGE', dims: '5.5m × 5.5m', x: 380, y: 15, w: 240, h: 38 },
-        { name: 'WELLNESS SPA & STEAM PAVILION', dims: '6.8m × 5.2m', x: 80, y: 380, w: 200, h: 140 },
-        { name: 'GUEST SUITE & STAFF QUARTERS', dims: '7.4m × 5.8m', x: 720, y: 345, w: 200, h: 175 },
-      ],
+      rooms: DAMAC_ISLAND_ROOMS,
     }),
     architecturalNarrative: {
       en: 'Conceived as an exclusive island sanctuary anchored within turquoise lagoons. The villas feature biophilic architectural envelopes with cascading vertical gardens, textured sandstone facades, and seamless indoor-outdoor floor transitions. Floorplates maximize water engagement through sunken fire-pit lounges, private plunge pools, and private crystalline beach access, while the upper-level sky observatories capture uninterrupted 360-degree views over the lush central archipelago.',
@@ -553,20 +630,14 @@ export const PROPERTIES_DATA: Property[] = [
       ar: 'العمارة المستوحاة من كوتور السيارات الخارقة والهندسة المخصصة',
     },
     mapUrl: 'https://maps.google.com/?q=Bugatti+Residences+by+Binghatti+Business+Bay+Dubai',
+    blueprintSheetNo: 'DWG-BR-04',
+    blueprintLevel: 'CANAL DISTRICT · SKY MANSION PENTHOUSE',
+    blueprintRooms: BUGATTI_RESIDENCES_ROOMS,
     blueprintUrl: buildBlueprintSvg({
       title: 'BUGATTI RESIDENCES SKY MANSION',
       sheetNo: 'DWG-BR-04',
       level: 'CANAL DISTRICT · SKY MANSION PENTHOUSE',
-      rooms: [
-        { name: 'HIGH-SPEED VEHICULAR CAR LIFT', dims: '6.0m × 4.2m', x: 420, y: 375, w: 160, h: 140, accent: true },
-        { name: 'SUPERCAR IN-RESIDENCE GALLERY', dims: '11.0m × 6.5m', x: 300, y: 220, w: 400, h: 140 },
-        { name: 'RIVIERA SKY POOL TERRACE', dims: '20.0m × 5.2m', x: 200, y: 65, w: 600, h: 80, accent: true },
-        { name: 'GRAND MASTER SKY SUITE', dims: '10.2m × 7.5m', x: 70, y: 160, w: 210, h: 220, accent: true },
-        { name: 'BESPOKE DINING & SOMMELIER CELLAR', dims: '9.0m × 6.4m', x: 720, y: 160, w: 210, h: 180 },
-        { name: 'CANTILEVER CANAL VIEW POOL', dims: '12.0m × 3.5m', x: 240, y: 15, w: 340, h: 36, accent: true },
-        { name: 'PRIVATE SPA & CRYO SUITE', dims: '7.5m × 5.6m', x: 70, y: 400, w: 210, h: 130 },
-        { name: 'BUTLER SERVICE & CONCIERGE HUB', dims: '8.0m × 6.0m', x: 720, y: 360, w: 210, h: 160 },
-      ],
+      rooms: BUGATTI_RESIDENCES_ROOMS,
     }),
     architecturalNarrative: {
       en: 'An unprecedented fusion of hypercar aerodynamics and haute-living skyscraper engineering. The façade’s fluid parametric contours evoke the iconic Bugatti C-line and aerodynamics of the Chiron, clad in fluid titanium-infused composite panels. Inside, each Sky Mansion is served by high-speed vehicular lifts that deliver collector hypercars directly into climate-controlled penthouse glass galleries. Private infinity pools jut daringly over the Business Bay canal, flanked by French Riviera sand-textured terraces.',
@@ -666,20 +737,14 @@ export const PROPERTIES_DATA: Property[] = [
       ar: 'العمارة السكنية الشاهقة والضيافة الفندقية الفاخرة',
     },
     mapUrl: 'https://maps.google.com/?q=Downtown+Dubai+Burj+Khalifa+District',
+    blueprintSheetNo: 'DWG-DSH-05',
+    blueprintLevel: 'BURJ KHALIFA DISTRICT · CORNER SKY RESIDENCE',
+    blueprintRooms: DOWNTOWN_SKY_HORIZON_ROOMS,
     blueprintUrl: buildBlueprintSvg({
       title: 'DOWNTOWN SKY HORIZON PENTHOUSE',
       sheetNo: 'DWG-DSH-05',
       level: 'BURJ KHALIFA DISTRICT · CORNER SKY RESIDENCE',
-      rooms: [
-        { name: 'FOYER & PRIVATE ELEVATOR LOBBY', dims: '5.6m × 4.8m', x: 420, y: 390, w: 160, h: 130 },
-        { name: 'BURJ KHALIFA PANORAMIC SALON', dims: '14.0m × 7.6m', x: 290, y: 195, w: 420, h: 175, accent: true },
-        { name: 'CONTINUOUS SKYLINE VIEW LOGGIA', dims: '24.0m CURVED BALCONY', x: 170, y: 55, w: 660, h: 80, accent: true },
-        { name: 'EXECUTIVE MASTER CORNER SUITE', dims: '8.6m × 6.8m', x: 70, y: 180, w: 200, h: 200, accent: true },
-        { name: 'POLIFORM SHOW KITCHEN & BAR', dims: '7.8m × 6.2m', x: 730, y: 195, w: 200, h: 160 },
-        { name: 'SUNSET CANTILEVERED GLASS POD', dims: '8.0m × 3.2m', x: 320, y: 14, w: 360, h: 36 },
-        { name: 'PRIVATE STUDY / GUEST BEDROOM', dims: '6.8m × 5.2m', x: 70, y: 400, w: 200, h: 130 },
-        { name: 'UTILITY & INTEGRATED SMART HUB', dims: '7.2m × 5.4m', x: 730, y: 375, w: 200, h: 145 },
-      ],
+      rooms: DOWNTOWN_SKY_HORIZON_ROOMS,
     }),
     architecturalNarrative: {
       en: 'Positioned at the epicentre of global metropolitan glamour. Rising vertically with a crystalline geometric façade engineered from triple-glazed ultra-low-iron glass, the residences offer framed, front-row vistas of the Burj Khalifa and the Dubai Fountains. Internal layouts emphasize open-format spatial freedom with minimalist concealed joinery, Poliform kitchens, and integrated smart home automation that harmonizes ambient lighting with the circadian sunset cycles of Downtown Dubai.',
@@ -779,20 +844,14 @@ export const PROPERTIES_DATA: Property[] = [
       ar: 'العمارة الساحلية ذات العلامات الفندقية العالمية',
     },
     mapUrl: 'https://maps.google.com/?q=Al+Marjan+Island+Ras+Al+Khaimah',
+    blueprintSheetNo: 'DWG-AMI-06',
+    blueprintLevel: 'WYNN CORRIDOR · MARITIME EXECUTIVE SUITE',
+    blueprintRooms: AL_MARJAN_ROOMS,
     blueprintUrl: buildBlueprintSvg({
       title: 'AL MARJAN ISLAND RESORT SUITES',
       sheetNo: 'DWG-AMI-06',
       level: 'WYNN CORRIDOR · MARITIME EXECUTIVE SUITE',
-      rooms: [
-        { name: 'DUAL-KEY ENTRY VESTIBULE', dims: '5.2m × 4.5m', x: 420, y: 390, w: 160, h: 130 },
-        { name: 'OCEANFRONT RESORT SALON', dims: '12.8m × 7.2m', x: 290, y: 195, w: 420, h: 175, accent: true },
-        { name: 'GULF HORIZON CURVED TERRACE', dims: '22.0m GLASS BALCONY', x: 180, y: 55, w: 640, h: 80, accent: true },
-        { name: 'MARITIME MASTER SUITE', dims: '7.8m × 6.4m', x: 80, y: 190, w: 190, h: 190, accent: true },
-        { name: 'LOCK-OFF HOSPITALITY STUDIO', dims: '7.6m × 5.8m', x: 730, y: 195, w: 190, h: 170 },
-        { name: 'SUN LOUNGER PLUNGE TERRACE', dims: '10.5m × 3.4m', x: 330, y: 15, w: 340, h: 36 },
-        { name: 'WELLNESS ENSUITE & SOAK TUB', dims: '6.4m × 4.8m', x: 80, y: 400, w: 190, h: 130 },
-        { name: 'SECURE OWNER STORAGE & PANTRY', dims: '6.5m × 4.5m', x: 730, y: 385, w: 190, h: 135 },
-      ],
+      rooms: AL_MARJAN_ROOMS,
     }),
     architecturalNarrative: {
       en: 'Engineered as a prime institutional hospitality asset directly neighboring the landmark Wynn Integrated Resort on Al Marjan Island. The architecture draws inspiration from maritime sails and Arabian sea waves, featuring expansive curved shade canopies, salt-resistant engineered composites, and panoramic corner terrace decks with glass balustrades that overlook the pristine Arabian Gulf. Designed with dual-key lock-off potential to maximize short-term luxury hospitality yields.',

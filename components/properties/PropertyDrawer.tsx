@@ -56,7 +56,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
         {/* Top Sticky Header with Close */}
         <div className="sticky top-0 z-20 flex items-center justify-between p-6 bg-white/95 backdrop-blur-xl border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <span className="px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-[10px] uppercase tracking-wider font-bold text-[#D97706]">
+            <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[10px] uppercase tracking-wider font-bold text-[#0A0E24]">
               {property.categoryLabel[lang]}
             </span>
             <span className="text-xs text-slate-500 font-mono font-medium">
@@ -118,7 +118,7 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
               {property.name[lang]}
             </h2>
             <div className="flex items-center gap-2 text-sm text-slate-500 mb-6">
-              <MapPin className="w-4 h-4 text-[#E8922D]" />
+              <MapPin className="w-4 h-4 text-slate-400" strokeWidth={1.5} />
               <span>{property.location[lang]}</span>
               <span className="text-slate-300">|</span>
               <span>{property.subLocation[lang]}</span>
@@ -224,8 +224,8 @@ export const PropertyDrawer: React.FC<PropertyDrawerProps> = ({
             <div className="space-y-2.5">
               {property.highlights[lang].map((highlight, idx) => (
                 <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700">
-                  <span className="w-4 h-4 rounded-full bg-[#2D3E8C]/10 text-[#2D3E8C] flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-2.5 h-2.5" />
+                  <span className="w-4 h-4 rounded-full bg-slate-100 text-[#0A0E24] flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-2.5 h-2.5 text-[#0A0E24]" strokeWidth={2} />
                   </span>
                   <span className="font-medium">{highlight}</span>
                 </div>

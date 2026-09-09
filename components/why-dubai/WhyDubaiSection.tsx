@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
-import { Building2, Globe2, ShieldCheck, Sun, TrendingUp, Landmark } from 'lucide-react';
+import { Landmark, Building2, TrendingUp, Globe2, Sun, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RevealText, PopIn, StaggerGroup, StaggerItem } from '@/components/ui/MotionPrimitives';
 import { motion } from 'motion/react';
@@ -17,12 +17,12 @@ export const WhyDubaiSection: React.FC<WhyDubaiSectionProps> = ({ lang }) => {
   const [activePillar, setActivePillar] = useState(0);
 
   const pillarIcons = [
-    <Landmark key="0" className="w-5 h-5" />,
-    <Building2 key="1" className="w-5 h-5" />,
-    <TrendingUp key="2" className="w-5 h-5" />,
-    <Globe2 key="3" className="w-5 h-5" />,
-    <Sun key="4" className="w-5 h-5" />,
-    <ShieldCheck key="5" className="w-5 h-5" />,
+    <Landmark key="0" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <Building2 key="1" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <TrendingUp key="2" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <Globe2 key="3" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <Sun key="4" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <ShieldCheck key="5" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
   ];
 
   return (
@@ -79,15 +79,15 @@ export const WhyDubaiSection: React.FC<WhyDubaiSectionProps> = ({ lang }) => {
                     </span>
                     <motion.div
                       animate={{ scale: isSelected ? 1.05 : 1 }}
-                      className="px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-[11px] font-mono font-bold text-[#D97706]"
+                      className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-mono font-bold text-[#0A0E24]"
                     >
                       {pillar.metric}
                     </motion.div>
                   </div>
 
-                  {/* Pillar Title */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="p-2.5 rounded-xl bg-white shadow-xs text-[#2D3E8C] border border-slate-100 group-hover:scale-105 transition-transform">
+                  {/* Pillar Title & 2D Icon */}
+                  <div className="flex items-center gap-3.5 mb-4">
+                    <span className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/80 flex items-center justify-center text-[#0A0E24] shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                       {pillarIcons[index]}
                     </span>
                     <h3 className="font-serif text-lg tracking-wide text-[#0A0E24] group-hover:text-[#2D3E8C] transition-colors font-bold">

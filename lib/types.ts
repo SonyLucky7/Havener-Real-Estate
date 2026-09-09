@@ -20,6 +20,19 @@ export interface PaymentMilestone {
   percentage: number;
 }
 
+export interface BlueprintRoom {
+  name: string;
+  dims: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  accent?: boolean;
+  zone?: 'social' | 'sanctuary' | 'culinary' | 'wellness' | 'exterior' | 'service';
+  specs?: string;
+  specsAr?: string;
+}
+
 export interface Property {
   id: string;
   slug: string;
@@ -51,6 +64,9 @@ export interface Property {
   scope?: LocalizedString;
   mapUrl?: string;
   blueprintUrl?: string;
+  blueprintRooms?: BlueprintRoom[];
+  blueprintSheetNo?: string;
+  blueprintLevel?: string;
   architecturalNarrative?: LocalizedString;
   dimensions?: {
     builtUpArea: string;

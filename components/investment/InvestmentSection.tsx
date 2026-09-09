@@ -22,12 +22,12 @@ export const InvestmentSection: React.FC<InvestmentSectionProps> = ({
   const [activeStepIndex, setActiveStepIndex] = useState(0);
 
   const stepIcons = [
-    <Search key="0" className="w-5 h-5 text-[#2D3E8C]" />,
-    <Compass key="1" className="w-5 h-5 text-[#E8922D]" />,
-    <BarChart3 key="2" className="w-5 h-5 text-[#2D3E8C]" />,
-    <CheckSquare key="3" className="w-5 h-5 text-[#E8922D]" />,
-    <Key key="4" className="w-5 h-5 text-[#2D3E8C]" />,
-    <TrendingUp key="5" className="w-5 h-5 text-[#E8922D]" />,
+    <Search key="0" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <Compass key="1" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <BarChart3 key="2" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <CheckSquare key="3" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <Key key="4" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
+    <TrendingUp key="5" className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />,
   ];
 
   return (
@@ -108,8 +108,8 @@ export const InvestmentSection: React.FC<InvestmentSectionProps> = ({
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                      <div className="flex items-center gap-3">
-                        <span className="p-2 rounded-xl bg-white shadow-xs text-[#2D3E8C] border border-slate-100 group-hover:scale-105 transition-transform">
+                      <div className="flex items-center gap-3.5">
+                        <span className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/80 flex items-center justify-center text-[#0A0E24] shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                           {stepIcons[idx]}
                         </span>
                         <h3 className="font-serif text-xl sm:text-2xl text-[#0A0E24] group-hover:text-[#2D3E8C] transition-colors font-bold">

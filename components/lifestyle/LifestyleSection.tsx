@@ -115,7 +115,7 @@ export const LifestyleSection: React.FC<LifestyleSectionProps> = ({ lang }) => {
                       {LIFESTYLE_MEDIA[activeIndex].title[lang]}
                     </h3>
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-200 mt-2">
-                      <MapPin className="w-3.5 h-3.5 text-[#E8922D]" />
+                      <MapPin className="w-3.5 h-3.5 text-white/90 shrink-0" strokeWidth={1.5} />
                       <span>{LIFESTYLE_MEDIA[activeIndex].location[lang]}</span>
                     </div>
                   </motion.div>

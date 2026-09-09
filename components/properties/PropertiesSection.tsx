@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Compass, Download } from 'lucide-react';
 import { Property, Language, Currency, PropertyCategory } from '@/lib/types';
+import { Compass, Download } from 'lucide-react';
 import { PROPERTIES_DATA } from '@/data/propertiesData';
 import { TRANSLATIONS } from '@/data/translations';
 import { formatPrice } from '@/lib/utils';
@@ -337,7 +337,7 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                         : `Inspect CAD Blueprint & Terms for ${property.name.en}`
                     }
                   >
-                    <Compass className="w-3.5 h-3.5 text-[#2D3E8C] group-hover/btn:text-white transition-colors" />
+                    <Compass className="w-3.5 h-3.5 text-[#0A0E24] group-hover/btn:text-white transition-colors" strokeWidth={1.5} />
                     <span className="truncate">
                       {lang === 'ar' ? 'فحص مخططات CAD والشروط' : 'Inspect CAD Blueprint & Terms'}
                     </span>
@@ -350,11 +350,11 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                       handleInstantBrochure(property);
                     }}
                     disabled={generatingBrochureId === property.id}
-                    className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3.5 rounded-xl bg-white hover:bg-amber-50 text-slate-700 hover:text-[#B45309] border border-slate-200/90 hover:border-[#E8922D]/40 text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0 disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3.5 rounded-xl bg-white hover:bg-slate-100 text-[#0A0E24] border border-slate-200/90 text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0 disabled:opacity-50"
                     title={lang === 'ar' ? 'تحميل ملف المستثمر (PDF)' : 'Instant Investor Brochure (PDF)'}
                     aria-label={lang === 'ar' ? 'تحميل ملف المستثمر' : 'Instant Brochure'}
                   >
-                    <Download className="w-3.5 h-3.5 text-[#E8922D]" />
+                    <Download className="w-3.5 h-3.5 text-[#0A0E24]" strokeWidth={1.5} />
                     <span className="hidden sm:inline">
                       {generatingBrochureId === property.id
                         ? lang === 'ar'

@@ -4,7 +4,8 @@ import React from 'react';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { BrandLogo } from '@/components/ui/BrandLogo';
-import { Globe, ArrowUp } from 'lucide-react';
+import { SocialLinks } from '@/components/ui/SocialLinks';
+import { ArrowUp, Globe } from 'lucide-react';
 
 interface FooterProps {
   lang: Language;
@@ -38,16 +39,21 @@ export const Footer: React.FC<FooterProps> = ({
               <BrandLogo variant="horizontal" size="lg" />
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-6 font-normal">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm mb-5 font-normal">
               {t.brandDesc}
             </p>
+
+            {/* Social Icons (Instagram, LinkedIn, X, YouTube, Facebook) */}
+            <div className="mb-6">
+              <SocialLinks variant="light" size="md" />
+            </div>
 
             <div className="flex items-center gap-3">
               <button
                 onClick={onLanguageToggle}
                 className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-[#2D3E8C] transition-colors shadow-2xs cursor-pointer"
               >
-                <Globe className="w-3.5 h-3.5 text-[#E8922D]" />
+                <Globe className="w-3.5 h-3.5 text-[#0A0E24]" strokeWidth={1.5} />
                 <span>{lang === 'en' ? 'العربية' : 'English'}</span>
               </button>
 

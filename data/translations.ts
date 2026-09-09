@@ -26,6 +26,11 @@ export const TRANSLATIONS = {
       primaryCTA: 'EXPLORE OPPORTUNITIES',
       secondaryCTA: 'BOOK A PRIVATE CONSULTATION',
       scrollIndicator: 'SCROLL TO DISCOVER',
+      featuredResidence: 'Featured 4K Residence',
+      viewResidenceDetails: 'Inspect Residence Dossier',
+      directConcierge: 'WhatsApp Concierge',
+      projectedRoi: 'Projected Net Yield',
+      goldenVisaEligible: '10-Yr Golden Visa Eligible',
     },
     about: {
       eyebrow: 'PRIVATE ADVISORY',
@@ -353,6 +358,11 @@ export const TRANSLATIONS = {
       primaryCTA: 'استكشف الفرص',
       secondaryCTA: 'احجز استشارة خاصة',
       scrollIndicator: 'مرر للاستكشاف',
+      featuredResidence: 'الإقامة المعمارية المميزة',
+      viewResidenceDetails: 'استعراض ملف الإقامة',
+      directConcierge: 'واتساب المستشار التنفيذي',
+      projectedRoi: 'صافي العائد المتوقع',
+      goldenVisaEligible: 'مؤهل للإقامة الذهبية (10 سنوات)',
     },
     about: {
       eyebrow: 'استشارات خاصة',

@@ -1,17 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ArrowDown, Layers, Building2, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import Image from 'next/image';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { Language, Currency, Property } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
-import { Button } from '@/components/ui/Button';
-import { LuxuryTowerScene } from '@/components/3d/LuxuryTowerScene';
-import { SerpentineRibbonScene } from '@/components/3d/SerpentineRibbonScene';
-import { PropertyDetailView } from '@/components/properties/PropertyDetailView';
-import { RevealText, PopIn } from '@/components/ui/MotionPrimitives';
-import { motion } from 'motion/react';
-
-export type HeroMode = 'ribbon' | 'tower';
+import { PROPERTIES_DATA } from '@/data/propertiesData';
+import { motion, AnimatePresence } from 'motion/react';
 
 export interface HeroSectionProps {
   lang: Language;
@@ -22,42 +17,56 @@ export interface HeroSectionProps {
   currency?: Currency;
 }
 
+interface FeaturedHeroItem {
+  property: Property;
+  ultra4kImage: string;
+}
+
 export const HeroSection: React.FC<HeroSectionProps> = ({
   lang,
   onOpenConsultation,
-  onSelectProperty,
-  selectedProperty,
-  onCloseDetail,
-  currency = 'AED',
 }) => {
-  const t = TRANSLATIONS[lang].hero;
-  const isRtl = lang === 'ar';
+  const t = TRANSLATIONS[lang];
 
-  const [heroMode, setHeroMode] = useState<HeroMode>('ribbon');
-  const [internalSelectedProperty, setInternalSelectedProperty] = useState<Property | null>(null);
+  // 4 Flagship 4K Residences
+  const featuredResidences: FeaturedHeroItem[] = useMemo(() => {
+    const propertySlugs = [
+      'palm-crown-residence',
+      'downtown-sky-horizon',
+      'bulgari-lighthouse-mansions',
+      'palm-jebel-ali-ocean-estates',
+    ];
 
-  // Fallback to internal selection state if parent does not manage it
-  const activeSelectedProperty = selectedProperty !== undefined ? selectedProperty : internalSelectedProperty;
+    const fallback4kImages = [
+      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=3840&q=95',
+      'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=3840&q=95',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=3840&q=95',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=3840&q=95',
+    ];
 
-  const handleSelectProperty = (property: Property) => {
-    if (onSelectProperty) {
-      onSelectProperty(property);
-    }
-    setInternalSelectedProperty(property);
-  };
+    return propertySlugs.map((slug, idx) => {
+      const prop =
+        PROPERTIES_DATA.find((p) => p.slug === slug) || PROPERTIES_DATA[idx % PROPERTIES_DATA.length];
+      return {
+        property: prop,
+        ultra4kImage: fallback4kImages[idx % fallback4kImages.length],
+      };
+    });
+  }, []);
 
-  const handleCloseDetail = () => {
-    if (onCloseDetail) {
-      onCloseDetail();
-    }
-    setInternalSelectedProperty(null);
-  };
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const handleInquire = (property: Property) => {
-    handleCloseDetail();
-    const propTitle = property.name[lang] || property.name.en;
-    onOpenConsultation(propTitle);
-  };
+  const activeItem = featuredResidences[activeIndex] || featuredResidences[0];
+  const activeProperty = activeItem.property;
+
+  // Continuous Automatic Smooth Image Cycle (every 5 seconds, never paused by hover)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % featuredResidences.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [featuredResidences.length]);
 
   const handleScrollToProperties = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -70,174 +79,136 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section
       id="hero"
-      className="relative min-h-[100dvh] w-full flex flex-col justify-between pt-32 pb-12 sm:pt-36 sm:pb-16 px-6 sm:px-8 overflow-hidden bg-gradient-to-b from-[#F2F6FC] via-white to-[#F8FAFC]"
+      className="relative min-h-[100dvh] w-full flex flex-col justify-between pt-32 pb-10 sm:pt-40 sm:pb-14 px-6 sm:px-12 overflow-hidden bg-[#0A0E24] text-white"
     >
-      {/* 3D WebGL Canvas Layer with Dual-Mode Support */}
-      {heroMode === 'ribbon' ? (
-        <SerpentineRibbonScene
-          className="opacity-95"
-          lang={lang}
-          onSelectProperty={handleSelectProperty}
-          activePropertyId={activeSelectedProperty?.id}
-        />
-      ) : (
-        <LuxuryTowerScene className="opacity-95" />
-      )}
-
-      {/* Atmospheric Luminous Background Layers */}
-      <div className="absolute top-0 right-0 w-[650px] h-[550px] bg-gradient-to-bl from-[#E8922D]/12 via-[#F59E0B]/6 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute top-10 left-0 w-[600px] h-[500px] bg-gradient-to-br from-[#2D3E8C]/10 via-[#3B4FA6]/5 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-10" />
-
-      {/* Main Content Area */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full my-auto flex flex-col items-start pointer-events-none">
-        {/* Top Header Controls: Eyebrow Badge & 3D Mode Switcher */}
-        <div className="w-full flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 pointer-events-none">
-          {/* Eyebrow Pill with Spring Pop-In */}
+      {/* ============================================================== */}
+      {/* 1. CINEMATIC 4K PROPERTY IMAGE BACKGROUND (CONTINUOUS AUTO)    */}
+      {/* ============================================================== */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <AnimatePresence mode="sync">
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/95 border border-slate-200/90 shadow-sm backdrop-blur-md pointer-events-auto"
+            key={activeItem.ultra4kImage}
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 1, scale: 1.0 }}
+            exit={{ opacity: 0, transition: { duration: 1.4, ease: 'easeInOut' } }}
+            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 w-full h-full"
           >
-            <span className="w-2 h-2 rounded-full bg-[#E8922D] animate-pulse" />
-            <span className="text-[10px] sm:text-[11px] tracking-[0.25em] uppercase text-[#2D3E8C] font-bold">
-              {t.eyebrow}
-            </span>
+            <Image
+              src={activeItem.ultra4kImage}
+              alt={activeProperty.name[lang] || 'Dubai Luxury Property'}
+              fill
+              priority
+              quality={95}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
           </motion.div>
+        </AnimatePresence>
 
-          {/* Dual-Mode 3D Switcher Pill */}
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-white/90 backdrop-blur-md border border-slate-200/90 p-1 rounded-full shadow-sm flex items-center gap-1 pointer-events-auto"
-            role="tablist"
-            aria-label={isRtl ? 'خيارات العرض ثلاثي الأبعاد' : '3D View Modes'}
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={heroMode === 'ribbon'}
-              onClick={() => setHeroMode('ribbon')}
-              className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
-                heroMode === 'ribbon'
-                  ? 'bg-[#2D3E8C] text-white shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-[#0A0E24] hover:bg-slate-100/70 font-medium'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>{isRtl ? 'مستكشف الشريط ثلاثي الأبعاد' : '3D Ribbon Explorer'}</span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={heroMode === 'tower'}
-              onClick={() => setHeroMode('tower')}
-              className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
-                heroMode === 'tower'
-                  ? 'bg-[#2D3E8C] text-white shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-[#0A0E24] hover:bg-slate-100/70 font-medium'
-              }`}
-            >
-              <Building2 className="w-3.5 h-3.5" />
-              <span>{isRtl ? 'برج معماري 360 درجة' : '360° Architectural Tower'}</span>
-            </button>
-          </motion.div>
-        </div>
-
-        {/* Main Headline with Staggered Word Reveal */}
-        <RevealText
-          text={t.headline.replace('\n', ' ')}
-          as="h1"
-          delay={0.15}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-[#0A0E24] leading-[1.08] max-w-5xl mb-6 sm:mb-8 font-bold pointer-events-auto"
-        />
-
-        {/* Supporting Copy */}
-        <PopIn delay={0.4} yOffset={24}>
-          <p className="text-base sm:text-lg md:text-xl text-slate-700 font-normal max-w-2xl leading-relaxed mb-4 pointer-events-auto">
-            {t.supporting}
-          </p>
-        </PopIn>
-
-        {/* Additional Guidance Text */}
-        <PopIn delay={0.5} yOffset={20}>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl leading-relaxed mb-5 sm:mb-6 pointer-events-auto">
-            {t.additional}
-          </p>
-        </PopIn>
-
-        {/* 3D Ribbon Interactive Guidance Banner (Shown in Ribbon Mode) */}
-        {heroMode === 'ribbon' && (
-          <PopIn delay={0.55} yOffset={16}>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/90 shadow-xs mb-6 sm:mb-8 text-xs text-slate-600 pointer-events-auto">
-              <Sparkles className="w-3.5 h-3.5 text-[#E8922D]" />
-              <span className="font-medium">
-                {isRtl
-                  ? 'اسحب للتنقل · انقر على أي مسكن لاستعراض المخططات وشروط الاستثمار'
-                  : 'Drag to glide · Click any residence to inspect CAD blueprints & investment terms'}
-              </span>
-            </div>
-          </PopIn>
-        )}
-
-        {/* Dual CTA Stack */}
-        <PopIn delay={0.6} yOffset={25}>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto pointer-events-auto">
-            <Button
-              variant="gold"
-              size="lg"
-              onClick={handleScrollToProperties}
-            >
-              {t.primaryCTA}
-            </Button>
-
-            <Button
-              variant="glass"
-              size="lg"
-              onClick={() => onOpenConsultation()}
-            >
-              {t.secondaryCTA}
-            </Button>
-          </div>
-        </PopIn>
+        {/* Delicate, subtle gradient scrim allowing the 4K property to shine */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E24] via-[#0A0E24]/30 to-[#0A0E24]/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0E24]/75 via-[#0A0E24]/20 to-transparent" />
       </div>
 
-      {/* Bottom Bar / Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
-        className="relative z-20 max-w-7xl mx-auto w-full flex items-center justify-between pt-8 border-t border-slate-200/80 text-xs text-slate-500"
-      >
-        <div className="flex items-center gap-6">
-          <span className="font-serif tracking-widest text-[#2D3E8C] font-bold">DXB</span>
-          <span className="hidden sm:inline font-mono">25.2048° N, 55.2708° E</span>
-          <span className="hidden md:inline text-slate-300">|</span>
-          <span className="hidden md:inline font-medium">Tier-1 Developer Portfolio</span>
+      {/* ============================================================== */}
+      {/* 2. REFINED MINIMALIST EDITORIAL CONTENT (OVER IMAGE)           */}
+      {/* ============================================================== */}
+      <div className="relative z-10 max-w-5xl my-auto flex flex-col items-start pointer-events-auto">
+        {/* Subtle Luxury Brand Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-4"
+        >
+          <span className="text-[11px] sm:text-xs tracking-[0.3em] uppercase font-mono text-slate-300 font-medium">
+            {lang === 'ar' ? 'هافنر العقارية · دبي' : 'HAVENER PROPERTY · DUBAI'}
+          </span>
+        </motion.div>
+
+        {/* Clean, Elegant, High-End Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-white font-normal leading-[1.08] mb-4 drop-shadow-md"
+        >
+          {lang === 'ar' ? 'عقارات دبي الفاخرة.' : 'Dubai Luxury Real Estate.'}
+        </motion.h1>
+
+        {/* Simple, Understated Narrative */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="text-sm sm:text-base md:text-lg text-slate-300 font-light max-w-xl leading-relaxed mb-8 drop-shadow-xs"
+        >
+          {lang === 'ar'
+            ? 'مساكن معمارية استثنائية وفرص استثمارية رائدة في أبرز وجهات دبي.'
+            : 'Curated architectural residences and iconic investment opportunities.'}
+        </motion.p>
+
+        {/* Clean, Premium CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center gap-4"
+        >
+          {/* Primary CTA */}
+          <a
+            href="#properties"
+            onClick={handleScrollToProperties}
+            className="group px-7 py-3.5 rounded-full bg-white text-[#0A0E24] hover:bg-slate-100 font-semibold text-xs tracking-wider uppercase transition-all shadow-xl hover:shadow-2xl active:scale-[0.98] inline-flex items-center gap-2 cursor-pointer"
+          >
+            <span>{t.hero.primaryCTA}</span>
+            <ArrowDown className="w-3.5 h-3.5 text-[#0A0E24] transition-transform group-hover:translate-y-0.5" strokeWidth={2} />
+          </a>
+
+          {/* Secondary CTA */}
+          <button
+            onClick={() => onOpenConsultation(activeProperty.name[lang])}
+            className="group px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs tracking-wider uppercase backdrop-blur-md transition-all active:scale-[0.98] inline-flex items-center gap-2 cursor-pointer"
+          >
+            <span>{t.hero.secondaryCTA}</span>
+            <ArrowUpRight className="w-3.5 h-3.5 text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={1.5} />
+          </button>
+        </motion.div>
+      </div>
+
+      {/* ============================================================== */}
+      {/* 3. REFINED BOTTOM BAR: ACTIVE PROPERTY & AMBIENT INDICATOR     */}
+      {/* ============================================================== */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-white/10 text-xs text-slate-300 pointer-events-auto">
+        {/* Active Property Subtle Caption */}
+        <div className="flex items-center gap-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E8922D] animate-pulse" />
+          <span className="font-serif text-sm font-medium text-white">
+            {activeProperty.name[lang]}
+          </span>
+          <span className="text-slate-500">·</span>
+          <span className="text-slate-400 text-xs font-light">
+            {activeProperty.location[lang]}
+          </span>
         </div>
 
-        <a
-          href="#properties"
-          className="group flex items-center gap-2 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-slate-600 hover:text-[#2D3E8C] transition-colors font-semibold"
-        >
-          <span>{t.scrollIndicator}</span>
-          <span className="w-6 h-6 rounded-full bg-white border border-slate-300 group-hover:border-[#2D3E8C] group-hover:bg-[#2D3E8C]/5 flex items-center justify-center transition-colors shadow-xs">
-            <ArrowDown className="w-3 h-3 text-[#2D3E8C] animate-bounce" />
-          </span>
-        </a>
-      </motion.div>
-
-      {/* Editorial Property Detail Modal View */}
-      <PropertyDetailView
-        property={activeSelectedProperty}
-        onClose={handleCloseDetail}
-        onInquire={handleInquire}
-        lang={lang}
-        currency={currency}
-      />
+        {/* Subtle Ambient Continuous Slide Progress Indicator (Clean lines, no buttons) */}
+        <div className="flex items-center gap-1.5">
+          {featuredResidences.map((_, idx) => (
+            <span
+              key={idx}
+              className={`h-0.5 rounded-full transition-all duration-700 ${
+                activeIndex === idx
+                  ? 'w-8 bg-white'
+                  : 'w-3 bg-white/25'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
     </section>
   );
 };
+
+export default HeroSection;

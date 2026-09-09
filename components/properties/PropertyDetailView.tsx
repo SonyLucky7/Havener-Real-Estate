@@ -11,22 +11,25 @@ import {
   RotateCcw,
   Maximize2,
   Minimize2,
-  Calendar,
-  Check,
-  CheckCircle2,
-  Compass,
-  Eye,
-  ShieldCheck,
-  Download,
-  MessageSquare,
-  Building2,
-  Sparkles,
   Layers,
   ArrowUpRight,
+  Award,
+  Check,
+  Building2,
+  ShieldCheck,
+  Compass,
+  Sofa,
+  Bed,
+  UtensilsCrossed,
+  Sparkles,
+  Waves,
+  Shield,
+  Ruler,
 } from 'lucide-react';
-import { Property, Language, Currency } from '@/lib/types';
+import { Property, Language, Currency, BlueprintRoom } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { PropertyVrTourScene } from '@/components/3d/PropertyVrTourScene';
 
 export interface PropertyDetailViewProps {
   property: Property | null;
@@ -58,14 +61,28 @@ const DETAIL_COPY = {
     section2Subtitle: 'CAD engineering drawings, axial spans, and spatial room programming.',
     cadView: 'Schematic CAD',
     specsView: 'Spatial Programming',
+    vrView: '3D VR View (Observer)',
+    spatialScheduleTitle: 'Spatial Programming Schedule',
+    spatialScheduleSub: 'Room-by-room volumetric allocation, clearances, and architectural specifications.',
+    allSpaces: 'All Spaces',
+    livingSocial: 'Social & Living',
+    sanctuaries: 'Suites & Sanctuaries',
+    culinary: 'Culinary & Dining',
+    wellness: 'Wellness & Thermal',
+    exterior: 'Terraces & Waterside',
+    service: 'Service & Back-of-House',
+    totalRoomsBadge: 'Configured Spatial Nodes',
+    roomDimensions: 'Spatial Footprint',
+    roomClearance: 'Volumetric Clearance',
+    roomArea: 'Calculated Floor Area',
     zoomIn: 'Zoom In',
     zoomOut: 'Zoom Out',
     resetZoom: 'Reset 100%',
     fullscreen: 'Expand Blueprint',
     closeFullscreen: 'Minimize',
-    virtualTourBadge: '360° Virtual Walkthrough Available',
-    virtualTourSub: 'Experience primary living pavilions, oceanfront terraces, and master suites in 3D fidelity.',
-    launchTour: 'Launch 360° Spatial Tour',
+    virtualTourBadge: '3D VR Spatial Walkthrough · Resident Observer',
+    virtualTourSub: 'Experience primary living pavilions and oceanfront terraces alongside the 3D resident observer or switch to First-Person POV at 1.72m eye-level.',
+    launchTour: 'Launch 3D VR Spatial Tour',
     tourClose: 'Exit Virtual Tour',
     tourViews: [
       { name: 'Grand Double-Height Ocean Salon', desc: 'Acoustic glass curtains framing panoramic Gulf sunsets' },
@@ -111,14 +128,28 @@ const DETAIL_COPY = {
     section2Title: 'المخطط المعماري التفاعلي والمواصفات الفنية',
     section2Subtitle: 'مخططات هندسية بصيغة CAD، محاور الأبعاد والبرمجة المكانية للغرف.',
     cadView: 'مخطط CAD الهندسي',
-    specsView: 'التوزيع المكاني',
+    specsView: 'البرمجة والتوزيع المكاني',
+    vrView: 'جولة ثلاثية الأبعاد (المراقب)',
+    spatialScheduleTitle: 'جدول البرمجة والتوزيع المكاني',
+    spatialScheduleSub: 'توزيع المساحات، الارتفاعات الحجمية، والمواصفات المعمارية للغرف والأجنحة.',
+    allSpaces: 'جميع المساحات',
+    livingSocial: 'صالات الاستقبال والمعيشة',
+    sanctuaries: 'الأجنحة الخاصة',
+    culinary: 'المطبخ والضيافة',
+    wellness: 'الاستجمام والسبا',
+    exterior: 'التراسات والمسطحات الخارجية',
+    service: 'الخدمات وغرف الدعم',
+    totalRoomsBadge: 'المناطق المعمارية المعتمدة',
+    roomDimensions: 'الأبعاد المكانية',
+    roomClearance: 'الارتفاع الحجمي',
+    roomArea: 'المساحة المحسوبة',
     zoomIn: 'تكبير',
     zoomOut: 'تصغير',
     resetZoom: 'إعادة ضبط 100%',
     fullscreen: 'تكبير المخطط',
     closeFullscreen: 'تصغير',
-    virtualTourBadge: 'جولة افتراضية 360° متاحة',
-    virtualTourSub: 'استكشف صالونات الاستقبال، التراسات الشاطئية والأجنحة الرئيسية بدقة ثلاثية الأبعاد.',
+    virtualTourBadge: 'جولة افتراضية ثلاثية الأبعاد 360° · تجربة المراقب المقيم',
+    virtualTourSub: 'استكشف الصالونات والتراسات الشاطئية بجوار المراقب ثلاثي الأبعاد أو انتقل إلى منظور عين الشخص (1.72م) بدقة 360°.',
     launchTour: 'بدء الجولة الافتراضية 360°',
     tourClose: 'إنهاء الجولة الافتراضية',
     tourViews: [
@@ -147,6 +178,63 @@ const DETAIL_COPY = {
   },
 };
 
+const parseRoomArea = (dims: string) => {
+  const match = dims.match(/([\d.]+)\s*m\s*[×x]\s*([\d.]+)\s*m/i);
+  if (match) {
+    const areaSqM = Math.round(parseFloat(match[1]) * parseFloat(match[2]) * 10) / 10;
+    const areaSqFt = Math.round(areaSqM * 10.7639);
+    return { sqM: areaSqM, sqFt: areaSqFt };
+  }
+  return null;
+};
+
+const getZoneConfig = (zone?: string, isRtl: boolean = false) => {
+  switch (zone) {
+    case 'social':
+      return {
+        label: isRtl ? 'استقبال ومعيشة' : 'Primary Social Pavilion',
+        color: 'border-blue-500/30 text-blue-400 bg-blue-950/40',
+        Icon: Sofa,
+      };
+    case 'sanctuary':
+      return {
+        label: isRtl ? 'أجنحة النوم الخاصة' : 'Private Sanctuary Wing',
+        color: 'border-amber-500/30 text-amber-300 bg-amber-950/40',
+        Icon: Bed,
+      };
+    case 'culinary':
+      return {
+        label: isRtl ? 'المطبخ والضيافة' : 'Culinary Suite & Dining',
+        color: 'border-slate-500/30 text-slate-300 bg-slate-900/60',
+        Icon: UtensilsCrossed,
+      };
+    case 'wellness':
+      return {
+        label: isRtl ? 'السبا والاستجمام' : 'Wellness & Thermal Spa',
+        color: 'border-blue-400/30 text-blue-300 bg-blue-950/40',
+        Icon: Sparkles,
+      };
+    case 'exterior':
+      return {
+        label: isRtl ? 'تراسات ومسطحات مائية' : 'Waterside Deck & Exterior',
+        color: 'border-emerald-500/30 text-emerald-300 bg-emerald-950/40',
+        Icon: Waves,
+      };
+    case 'service':
+      return {
+        label: isRtl ? 'الخدمات والدعم' : 'Back-of-House & Service',
+        color: 'border-slate-600/30 text-slate-400 bg-slate-900/40',
+        Icon: Shield,
+      };
+    default:
+      return {
+        label: isRtl ? 'مساحة معمارية' : 'Architectural Chamber',
+        color: 'border-slate-700 text-slate-300 bg-slate-900/50',
+        Icon: Layers,
+      };
+  }
+};
+
 export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   property,
   onClose,
@@ -158,12 +246,20 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
   const [blueprintZoom, setBlueprintZoom] = useState(1);
   const [isBlueprintFullscreen, setIsBlueprintFullscreen] = useState(false);
   const [isVirtualTourOpen, setIsVirtualTourOpen] = useState(false);
-  const [tourViewIndex, setTourViewIndex] = useState(0);
+  const [tourViewIndex] = useState(0);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [blueprintMode, setBlueprintMode] = useState<'cad' | 'specs'>('cad');
+  const [blueprintMode, setBlueprintMode] = useState<'cad' | 'specs' | 'vr'>('cad');
+  const [spatialZoneFilter, setSpatialZoneFilter] = useState<string>('all');
+  const [activeHoverRoom, setActiveHoverRoom] = useState<string | null>(null);
 
   const t = DETAIL_COPY[lang];
   const isRtl = lang === 'ar';
+
+  const rooms: BlueprintRoom[] = property?.blueprintRooms || [];
+  const filteredRooms =
+    spatialZoneFilter === 'all'
+      ? rooms
+      : rooms.filter((r) => r.zone === spatialZoneFilter);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -577,13 +673,13 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
 
             {/* Status pills & Close */}
             <div className="flex items-center gap-3">
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2D3E8C]/10 text-[#2D3E8C] text-[10px] font-bold uppercase tracking-wider">
-                <Building2 className="w-3 h-3" />
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-bold uppercase tracking-wider">
+                <Building2 className="w-3.5 h-3.5 text-slate-700" strokeWidth={1.5} />
                 {property.categoryLabel[lang]}
               </span>
 
-              <span className="hidden md:inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider">
-                <ShieldCheck className="w-3 h-3 text-emerald-600" />
+              <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-bold uppercase tracking-wider">
+                <ShieldCheck className="w-3.5 h-3.5 text-slate-700" strokeWidth={1.5} />
                 {t.dldEscrow}
               </span>
 
@@ -626,7 +722,7 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-[#0A0E24] hover:text-[#2D3E8C] transition-all group shadow-2xs"
                 >
-                  <MapPin className="w-4 h-4 text-[#E8922D]" />
+                  <MapPin className="w-4 h-4 text-slate-500" strokeWidth={1.5} />
                   <span>{t.viewOnMap}</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#2D3E8C] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
@@ -806,10 +902,10 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 {property.highlights[lang].map((highlight, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-[#2D3E8C]/30 transition-colors"
+                    className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-slate-300 transition-colors"
                   >
-                    <span className="w-5 h-5 rounded-full bg-[#2D3E8C]/10 text-[#2D3E8C] flex items-center justify-center shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 stroke-[2.5]" />
+                    <span className="w-5 h-5 rounded-full bg-slate-100 text-[#0A0E24] flex items-center justify-center shrink-0 mt-0.5">
+                      <Check className="w-3 h-3 text-[#0A0E24]" strokeWidth={2} />
                     </span>
                     <span className="text-xs sm:text-sm text-slate-700 font-medium leading-snug">
                       {highlight}
@@ -865,126 +961,398 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   >
                     {t.specsView}
                   </button>
+                  <button
+                    onClick={() => setBlueprintMode('vr')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      blueprintMode === 'vr'
+                        ? 'bg-[#E8922D] text-white shadow-xs'
+                        : 'text-slate-600 hover:text-[#0A0E24]'
+                    }`}
+                  >
+                    {t.vrView}
+                  </button>
                 </div>
 
-                {/* Zoom Controls */}
-                <div className="inline-flex items-center gap-1 rounded-xl p-1 bg-white border border-slate-200 shadow-2xs">
-                  <button
-                    onClick={handleZoomIn}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
-                    title={t.zoomIn}
-                    aria-label={t.zoomIn}
-                  >
-                    <ZoomIn className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={handleZoomOut}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
-                    title={t.zoomOut}
-                    aria-label={t.zoomOut}
-                  >
-                    <ZoomOut className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={handleResetZoom}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
-                    title={t.resetZoom}
-                    aria-label={t.resetZoom}
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    onClick={() => setIsBlueprintFullscreen(true)}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
-                    title={t.fullscreen}
-                    aria-label={t.fullscreen}
-                  >
-                    <Maximize2 className="w-4 h-4" />
-                  </button>
-                </div>
+                {/* Controls depending on mode */}
+                {blueprintMode === 'cad' ? (
+                  <div className="inline-flex items-center gap-1 rounded-xl p-1 bg-white border border-slate-200 shadow-2xs">
+                    <button
+                      onClick={handleZoomIn}
+                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      title={t.zoomIn}
+                      aria-label={t.zoomIn}
+                    >
+                      <ZoomIn className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={handleZoomOut}
+                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      title={t.zoomOut}
+                      aria-label={t.zoomOut}
+                    >
+                      <ZoomOut className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={handleResetZoom}
+                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      title={t.resetZoom}
+                      aria-label={t.resetZoom}
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setIsBlueprintFullscreen(true)}
+                      className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-[#2D3E8C] transition-colors cursor-pointer"
+                      title={t.fullscreen}
+                      aria-label={t.fullscreen}
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : blueprintMode === 'specs' ? (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-2xs text-xs font-mono text-slate-600">
+                    <Ruler className="w-3.5 h-3.5 text-[#2D3E8C]" strokeWidth={1.5} />
+                    <span>{rooms.length} {isRtl ? 'مناطق معمارية' : 'Programmed Nodes'}</span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-2">
+                    <button
+                      onClick={() => setIsVirtualTourOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#E8922D] hover:bg-[#d47f20] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+                    >
+                      <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      <span>{isRtl ? 'ملء الشاشة 3D' : 'Fullscreen VR'}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Blueprint Technical Display Canvas */}
-            <div className="relative rounded-2xl sm:rounded-3xl bg-[#080D1A] border-2 border-[#2D3E8C]/40 shadow-2xl overflow-hidden mb-6">
-              {/* Technical Canvas Overlay Watermark */}
-              <div className="absolute top-4 start-4 z-20 flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-md bg-[#2D3E8C]/60 text-blue-200 text-[10px] font-mono tracking-widest uppercase">
-                  CAD DWG 01
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold tracking-wider">
-                  SCALE 1:100 @ A1
-                </span>
-              </div>
-
-              {/* Blueprint Zoom Level Badge */}
-              <div className="absolute top-4 end-4 z-20 px-2.5 py-1 rounded-md bg-white/10 backdrop-blur-md text-white text-[10px] font-mono font-bold">
-                ZOOM: {Math.round(blueprintZoom * 100)}%
-              </div>
-
-              {/* Blueprint SVG/Graphic Container */}
-              <div
-                className={`w-full min-h-[360px] sm:min-h-[460px] ${
-                  blueprintZoom > 1 ? 'overflow-auto' : 'overflow-hidden'
-                } flex items-center justify-center p-4`}
-              >
-                <div
-                  style={{
-                    transform: `scale(${blueprintZoom})`,
-                    transformOrigin: 'center center',
-                    transition: 'transform 0.25s ease-out',
-                  }}
-                  className="w-full max-w-4xl"
-                >
-                  {property.blueprintUrl ? (
-                    /* Render SVG data URI or blueprint image */
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={property.blueprintUrl}
-                      alt={`${property.name[lang]} Architectural Blueprint`}
-                      className="w-full h-auto rounded-lg shadow-inner select-none pointer-events-none"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-20 text-center text-slate-400">
-                      <Layers className="w-12 h-12 text-[#2D3E8C] mb-3 animate-pulse" />
-                      <p className="text-sm font-mono">DLD CAD VECTOR SCHEMATIC LOADED</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* 360° Virtual Walkthrough Preview Badge / Launcher */}
-            <div className="p-6 rounded-2xl bg-gradient-to-r from-[#0A0E24] via-[#151E4D] to-[#2D3E8C] text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#E8922D]/20 border border-[#E8922D]/40 flex items-center justify-center text-[#E8922D] shrink-0 mt-0.5">
-                  <Compass className="w-6 h-6 animate-spin" style={{ animationDuration: '16s' }} />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                    <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FCD34D]">
-                      {t.virtualTourBadge}
+            {blueprintMode === 'cad' ? (
+              /* ============================================================== */
+              /* 1. SCHEMATIC CAD VIEW                                          */
+              /* ============================================================== */
+              <div className="relative rounded-2xl sm:rounded-3xl bg-[#080D1A] border-2 border-[#2D3E8C]/40 shadow-2xl overflow-hidden mb-6 p-4 sm:p-6">
+                {/* Technical Canvas Overlay Watermark */}
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-blue-950/80">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-1 rounded-md bg-[#2D3E8C]/60 text-blue-200 text-[10px] font-mono tracking-widest uppercase">
+                      {property.blueprintSheetNo || 'CAD DWG 01'}
+                    </span>
+                    <span className="px-2.5 py-1 rounded-md bg-[#2D3E8C]/40 border border-[#2D3E8C]/60 text-blue-200 text-[10px] font-mono font-bold tracking-wider">
+                      SCALE 1:100 @ A1
+                    </span>
+                    <span className="hidden sm:inline-block text-[11px] font-mono text-slate-400">
+                      {property.blueprintLevel || property.name[lang]}
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal">
-                    {t.virtualTourSub}
-                  </p>
+
+                  {/* Blueprint Zoom Level Badge */}
+                  <div className="px-2.5 py-1 rounded-md bg-white/10 backdrop-blur-md text-white text-[10px] font-mono font-bold">
+                    ZOOM: {Math.round(blueprintZoom * 100)}%
+                  </div>
+                </div>
+
+                {/* Blueprint SVG/Graphic Container */}
+                <div
+                  className={`w-full min-h-[360px] sm:min-h-[460px] ${
+                    blueprintZoom > 1 ? 'overflow-auto' : 'overflow-hidden'
+                  } flex items-center justify-center p-2`}
+                >
+                  <div
+                    style={{
+                      transform: `scale(${blueprintZoom})`,
+                      transformOrigin: 'center center',
+                      transition: 'transform 0.25s ease-out',
+                    }}
+                    className="w-full max-w-4xl"
+                  >
+                    {property.blueprintUrl ? (
+                      /* Render SVG data URI or blueprint image */
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={property.blueprintUrl}
+                        alt={`${property.name[lang]} Architectural Blueprint`}
+                        className="w-full h-auto rounded-lg shadow-inner select-none pointer-events-none"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-20 text-center text-slate-400">
+                        <Layers className="w-12 h-12 text-[#2D3E8C] mb-3 animate-pulse" />
+                        <p className="text-sm font-mono">DLD CAD VECTOR SCHEMATIC LOADED</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Interactive CAD Room Nodes Navigator */}
+                {rooms.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-blue-950/80">
+                    <div className="flex items-center justify-between gap-2 mb-2.5">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#93C5FD]">
+                        {isRtl ? 'المناطق المعمارية المعتمدة على المخطط' : 'Verified Programmed Chambers & Rooms'}
+                      </span>
+                      <span className="text-[10px] font-mono text-slate-500">
+                        {rooms.length} {isRtl ? 'مساحة' : 'Chambers'}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {rooms.map((room, idx) => (
+                        <div
+                          key={idx}
+                          onMouseEnter={() => setActiveHoverRoom(room.name)}
+                          onMouseLeave={() => setActiveHoverRoom(null)}
+                          className={`px-3 py-1.5 rounded-lg text-[11px] font-mono transition-all flex items-center gap-2 cursor-default ${
+                            activeHoverRoom === room.name
+                              ? 'bg-[#2D3E8C] border border-[#60A5FA] text-white shadow-md'
+                              : 'bg-blue-950/40 border border-blue-900/40 text-blue-200 hover:border-blue-700'
+                          }`}
+                        >
+                          <span className={room.accent ? 'text-amber-400 font-bold text-[10px]' : 'opacity-50 text-[10px]'}>0{idx + 1}</span>
+                          <span className="font-semibold">{room.name}</span>
+                          <span className="text-slate-400 text-[10px]">({room.dims})</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : blueprintMode === 'specs' ? (
+              /* ============================================================== */
+              /* 2. SPATIAL PROGRAMMING & VOLUMETRIC SCHEDULE MATRIX             */
+              /* ============================================================== */
+              <div className="rounded-2xl sm:rounded-3xl bg-[#080D1A] border-2 border-[#2D3E8C]/40 shadow-2xl p-5 sm:p-8 mb-6 text-white">
+                {/* Header info */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10 mb-6">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="px-2.5 py-1 rounded-md bg-[#2D3E8C]/60 text-blue-200 text-[10px] font-mono tracking-widest uppercase">
+                        {property.blueprintSheetNo || 'DWG 01'} · {isRtl ? 'مصفوفة التوزيع' : 'SCHEDULE MATRIX'}
+                      </span>
+                      <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold tracking-wider">
+                        DLD VERIFIED
+                      </span>
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white">
+                      {t.spatialScheduleTitle}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-400">
+                      {t.spatialScheduleSub}
+                    </p>
+                  </div>
+
+                  <div className="shrink-0 text-start sm:text-end">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#E8922D] block mb-0.5">
+                      {isRtl ? 'المستوى المعماري' : 'Architectural Elevation'}
+                    </span>
+                    <span className="text-xs font-mono text-slate-300 font-bold">
+                      {property.blueprintLevel || property.location[lang]}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 4 Volumetric Metric Cards */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Layers className="w-4 h-4 text-blue-400" strokeWidth={1.5} />
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                        {t.bua}
+                      </span>
+                    </div>
+                    <div className="text-base sm:text-lg font-bold text-white font-mono">
+                      {property.dimensions?.builtUpArea || property.sizeSqFt}
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Compass className="w-4 h-4 text-amber-400" strokeWidth={1.5} />
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                        {t.plotArea}
+                      </span>
+                    </div>
+                    <div className="text-base sm:text-lg font-bold text-white font-mono">
+                      {property.dimensions?.plotArea || (isRtl ? 'مساحة مخصصة مميزة' : 'Prime Sector Footprint')}
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Ruler className="w-4 h-4 text-emerald-400" strokeWidth={1.5} />
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                        {t.ceilingHeight}
+                      </span>
+                    </div>
+                    <div className="text-base sm:text-lg font-bold text-white font-mono">
+                      {property.dimensions?.ceilingHeight || '3.8m - 6.5m'}
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="flex items-center gap-2 mb-1">
+                      <ShieldCheck className="w-4 h-4 text-blue-300" strokeWidth={1.5} />
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                        {t.totalRoomsBadge}
+                      </span>
+                    </div>
+                    <div className="text-base sm:text-lg font-bold text-white font-mono">
+                      {rooms.length} {isRtl ? 'غرف ومساحات' : 'Dedicated Chambers'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Spatial Zone Category Filter Tabs */}
+                <div className="flex flex-wrap items-center gap-1.5 mb-6 pb-4 border-b border-white/10">
+                  {[
+                    { id: 'all', label: t.allSpaces },
+                    { id: 'social', label: t.livingSocial },
+                    { id: 'sanctuary', label: t.sanctuaries },
+                    { id: 'culinary', label: t.culinary },
+                    { id: 'wellness', label: t.wellness },
+                    { id: 'exterior', label: t.exterior },
+                    { id: 'service', label: t.service },
+                  ].map((filter) => {
+                    const count = filter.id === 'all' ? rooms.length : rooms.filter(r => r.zone === filter.id).length;
+                    if (filter.id !== 'all' && count === 0) return null;
+                    return (
+                      <button
+                        key={filter.id}
+                        onClick={() => setSpatialZoneFilter(filter.id)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                          spatialZoneFilter === filter.id
+                            ? 'bg-[#2D3E8C] text-white shadow-xs'
+                            : 'bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10'
+                        }`}
+                      >
+                        <span>{filter.label}</span>
+                        <span className="text-[10px] opacity-70 font-mono">({count})</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Room Program Schedule Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  {filteredRooms.map((room, idx) => {
+                    const zone = getZoneConfig(room.zone, isRtl);
+                    const ZoneIcon = zone.Icon;
+                    const area = parseRoomArea(room.dims);
+                    const roomSpecs = isRtl && room.specsAr ? room.specsAr : room.specs;
+
+                    return (
+                      <div
+                        key={idx}
+                        className={`p-4 sm:p-5 rounded-2xl border transition-all ${
+                          room.accent
+                            ? 'bg-amber-950/15 border-amber-500/30'
+                            : 'bg-white/[0.03] border-white/10 hover:border-blue-500/30'
+                        }`}
+                      >
+                        {/* Zone pill & index */}
+                        <div className="flex items-center justify-between gap-2 mb-3">
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-mono font-semibold border ${zone.color}`}
+                          >
+                            <ZoneIcon className="w-3 h-3" strokeWidth={1.5} />
+                            <span>{zone.label}</span>
+                          </span>
+
+                          <span className="text-[10px] font-mono text-slate-500">
+                            NODE 0{idx + 1}
+                          </span>
+                        </div>
+
+                        {/* Room Name */}
+                        <h4 className="text-sm sm:text-base font-bold text-white mb-2 tracking-wide font-mono">
+                          {room.name}
+                        </h4>
+
+                        {/* Metric pills: Dimensions + Area */}
+                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                          <div className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[11px] font-mono text-slate-200">
+                            <span className="text-slate-400 me-1.5">{t.roomDimensions}:</span>
+                            <span className="font-bold text-white">{room.dims}</span>
+                          </div>
+
+                          {area && (
+                            <div className="px-2.5 py-1 rounded-md bg-blue-950/30 border border-blue-900/30 text-[11px] font-mono text-blue-300">
+                              <span className="text-slate-400 me-1.5">{t.roomArea}:</span>
+                              <span>{area.sqM} m² ({area.sqFt} sq.ft)</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Architectural Specs */}
+                        {roomSpecs && (
+                          <div className="pt-2.5 border-t border-white/10 text-xs text-slate-300 leading-relaxed font-sans">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#E8922D] block mb-0.5">
+                              {isRtl ? 'المواصفات والتشطيبات المعمارية:' : 'Architectural Specification:'}
+                            </span>
+                            {roomSpecs}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Spatial Program Distribution Summary Bar */}
+                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-slate-300">
+                      {isRtl ? 'توزيع الكتل والمساحات الحجمية للمشروع' : 'Volumetric Space Allocation Distribution'}
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      100% {isRtl ? 'تخطيط مكتمل' : 'Programmed'}
+                    </span>
+                  </div>
+
+                  {/* Multi-segment distribution progress bar */}
+                  <div className="w-full h-2.5 rounded-full bg-white/10 flex overflow-hidden gap-0.5">
+                    <div className="h-full bg-blue-500 rounded-s-full" style={{ width: '35%' }} title="Living & Social: 35%" />
+                    <div className="h-full bg-amber-500" style={{ width: '25%' }} title="Private Sanctuaries: 25%" />
+                    <div className="h-full bg-slate-400" style={{ width: '15%' }} title="Culinary: 15%" />
+                    <div className="h-full bg-emerald-500" style={{ width: '15%' }} title="Exterior & Water: 15%" />
+                    <div className="h-full bg-slate-600 rounded-e-full" style={{ width: '10%' }} title="Service & Back of House: 10%" />
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 mt-2 text-[10px] font-mono text-slate-400">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-blue-500" />
+                      <span>{t.livingSocial} (35%)</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-500" />
+                      <span>{t.sanctuaries} (25%)</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-slate-400" />
+                      <span>{t.culinary} (15%)</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span>{t.exterior} (15%)</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-slate-600" />
+                      <span>{t.service} (10%)</span>
+                    </span>
+                  </div>
                 </div>
               </div>
-
-              <div className="shrink-0">
-                <Button
-                  variant="gold"
-                  size="md"
-                  onClick={() => setIsVirtualTourOpen(true)}
-                  className="w-full sm:w-auto shadow-md"
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  {t.launchTour}
-                </Button>
+            ) : (
+              /* ============================================================== */
+              /* 3. 3D VR INTERIOR WALKTHROUGH WITH RESIDENT OBSERVER           */
+              /* ============================================================== */
+              <div className="rounded-2xl sm:rounded-3xl border-2 border-[#2D3E8C]/40 shadow-2xl overflow-hidden bg-[#080D1A] mb-6">
+                <PropertyVrTourScene
+                  property={property}
+                  lang={lang}
+                  className="h-[520px] w-full"
+                />
               </div>
-            </div>
+            )}
           </section>
 
           {/* ============================================================== */}
@@ -1034,11 +1402,11 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   </span>
                 </div>
 
-                <div className="px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-center">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-amber-700 block mb-0.5">
+                <div className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block mb-0.5">
                     {t.roiProjected}
                   </span>
-                  <span className="text-sm font-bold text-[#D97706]">
+                  <span className="text-sm font-bold text-[#0A0E24]">
                     {property.expectedRoi || '8.4% Net Projected'}
                   </span>
                 </div>
@@ -1111,27 +1479,27 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
 
             {/* 10-Year UAE Golden Visa Qualification Badge */}
             {isGoldenVisaEligible && (
-              <div className="p-6 rounded-2xl bg-amber-50/80 border-2 border-amber-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-2xs">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md">
-                    <Sparkles className="w-6 h-6" />
+                  <div className="w-11 h-11 rounded-xl bg-white border border-slate-200 text-[#0A0E24] flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
+                    <Award className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-amber-200/60 text-[#92400E] text-[10px] font-bold uppercase tracking-wider mb-1">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-slate-200/70 text-slate-700 text-[10px] font-bold uppercase tracking-wider mb-1">
                       {isRtl ? 'حوافز المستثمرين في دبي' : 'Dubai Investor Privilege'}
                     </span>
-                    <h4 className="font-serif text-lg font-bold text-[#78350F] mb-1">
+                    <h4 className="font-serif text-lg font-bold text-[#0A0E24] mb-1">
                       {t.goldenVisaTitle}
                     </h4>
-                    <p className="text-xs sm:text-sm text-amber-900/80 leading-relaxed font-normal max-w-2xl">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-2xl">
                       {t.goldenVisaDesc}
                     </p>
                   </div>
                 </div>
 
                 <div className="shrink-0 text-center sm:text-right rtl:sm:text-left">
-                  <span className="px-3.5 py-1.5 rounded-xl bg-white/90 border border-amber-300 text-amber-900 font-bold text-xs inline-flex items-center gap-1.5 shadow-2xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-[#0A0E24] font-semibold text-xs inline-flex items-center gap-2 shadow-2xs">
+                    <Check className="w-3.5 h-3.5 text-[#0A0E24]" strokeWidth={2} />
                     <span>{isRtl ? 'مؤهل فوري' : 'Instant Eligibility'}</span>
                   </span>
                 </div>
@@ -1154,16 +1522,16 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
                 {/* Dynamic PDF Generator Button */}
                 <Button
                   variant="outline"
                   size="md"
+                  icon={false}
                   onClick={handleDownloadBrochure}
                   disabled={isGeneratingPdf}
-                  className="shadow-2xs text-xs font-bold"
+                  className="w-full sm:w-auto h-12 px-6 text-xs font-bold tracking-wide shadow-2xs justify-center"
                 >
-                  <Download className="w-4 h-4 mr-2 text-[#2D3E8C]" />
                   {isGeneratingPdf ? t.actions.generatingBrochure : t.actions.downloadBrochure}
                 </Button>
 
@@ -1172,9 +1540,8 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                   href={getWhatsAppLink()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
+                  className="w-full sm:w-auto h-12 px-6 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold tracking-wide inline-flex items-center justify-center transition-all shadow-md hover:shadow-lg cursor-pointer select-none whitespace-nowrap active:scale-[0.98]"
                 >
-                  <MessageSquare className="w-4 h-4" />
                   <span>{t.actions.whatsappInquiry}</span>
                 </a>
 
@@ -1182,14 +1549,14 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 <Button
                   variant="gold"
                   size="md"
+                  icon={false}
                   onClick={() => {
                     if (onInquire) {
                       onInquire(property);
                     }
                   }}
-                  className="shadow-md text-xs font-bold"
+                  className="w-full sm:w-auto h-12 px-6 text-xs font-bold tracking-wide shadow-md justify-center"
                 >
-                  <Calendar className="w-4 h-4 mr-2" />
                   {t.actions.scheduleViewing}
                 </Button>
               </div>
@@ -1276,6 +1643,25 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
                 )}
               </div>
             </div>
+
+            {rooms.length > 0 && (
+              <div className="pt-3 border-t border-blue-900/40 flex flex-wrap items-center justify-center gap-2">
+                {rooms.map((room, idx) => (
+                  <span
+                    key={idx}
+                    className={`px-2.5 py-1 rounded-md text-[10px] font-mono flex items-center gap-1.5 ${
+                      room.accent
+                        ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300'
+                        : 'bg-blue-950/60 border border-blue-800/40 text-blue-200'
+                    }`}
+                  >
+                    <span className="opacity-50">0{idx + 1}</span>
+                    <span>{room.name}</span>
+                    <span className="text-slate-400">({room.dims})</span>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1284,81 +1670,19 @@ export const PropertyDetailView: React.FC<PropertyDetailViewProps> = ({
         {/* ============================================================== */}
         {isVirtualTourOpen && (
           <div
-            className="fixed inset-0 z-60 bg-black/90 backdrop-blur-xl flex flex-col p-4 sm:p-8 text-white animate-in fade-in duration-200"
+            className="fixed inset-0 z-60 bg-black/95 backdrop-blur-xl flex flex-col p-2 sm:p-6 text-white animate-in fade-in duration-200"
             role="dialog"
             aria-modal="true"
           >
-            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
-              <div className="flex items-center gap-3">
-                <Compass className="w-5 h-5 text-[#E8922D] animate-spin" style={{ animationDuration: '10s' }} />
-                <div>
-                  <h3 className="text-sm font-bold tracking-wider">
-                    {t.virtualTourBadge}
-                  </h3>
-                  <p className="text-xs text-slate-400 font-mono">
-                    {t.tourViews[tourViewIndex].name}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setIsVirtualTourOpen(false)}
-                className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all cursor-pointer"
-              >
-                {t.tourClose} ✕
-              </button>
-            </div>
-
-            {/* Virtual Tour 360 Viewport Container */}
-            <div className="relative flex-1 rounded-2xl overflow-hidden bg-slate-900 border border-white/15 flex items-center justify-center">
-              <Image
-                src={property.gallery[tourViewIndex] || property.image}
-                alt="360 View"
-                fill
-                className="object-cover transition-all duration-700 filter brightness-90"
+            <div className="flex-1 w-full h-full relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/15">
+              <PropertyVrTourScene
+                property={property}
+                initialNodeIndex={tourViewIndex}
+                onClose={() => setIsVirtualTourOpen(false)}
+                lang={lang}
+                isModal={true}
+                className="w-full h-full rounded-2xl sm:rounded-3xl"
               />
-
-              {/* Spatial Overlay UI */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 pointer-events-none" />
-
-              {/* Compass & Bearing HUD */}
-              <div className="absolute top-6 start-6 px-4 py-2 rounded-xl bg-black/50 backdrop-blur-md border border-white/20 text-xs font-mono text-white flex items-center gap-3">
-                <span className="text-[#E8922D] font-bold">BEARING 240° SW</span>
-                <span className="text-slate-500">|</span>
-                <span>ARABIAN GULF WATERFRONT SIGHTLINE</span>
-              </div>
-
-              {/* Room Description & Switcher */}
-              <div className="absolute bottom-8 start-6 end-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="max-w-md">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#FCD34D] font-bold block mb-1">
-                    ACTIVE SPATIAL NODE 0{tourViewIndex + 1}
-                  </span>
-                  <h4 className="text-lg font-bold text-white mb-1">
-                    {t.tourViews[tourViewIndex].name}
-                  </h4>
-                  <p className="text-xs text-slate-300">
-                    {t.tourViews[tourViewIndex].desc}
-                  </p>
-                </div>
-
-                {/* View Switcher Pills */}
-                <div className="flex items-center gap-2">
-                  {t.tourViews.map((view, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setTourViewIndex(idx)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        tourViewIndex === idx
-                          ? 'bg-[#E8922D] text-white shadow-lg scale-105'
-                          : 'bg-black/60 hover:bg-black/80 text-slate-300 border border-white/20'
-                      }`}
-                    >
-                      0{idx + 1}: {view.name.split(' ')[0]}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         )}

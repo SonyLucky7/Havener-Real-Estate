@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { Button } from '@/components/ui/Button';
-import { Phone, MessageCircle, Mail, MapPin, Shield, CheckCircle2, Send } from 'lucide-react';
+import { SocialLinks } from '@/components/ui/SocialLinks';
+import { Send, MessageCircle, Phone, Mail, MapPin, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { RevealText, PopIn } from '@/components/ui/MotionPrimitives';
 import { motion } from 'motion/react';
 import confetti from 'canvas-confetti';
@@ -95,8 +96,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                 rel="noopener noreferrer"
                 className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 flex items-center gap-4 transition-all duration-300 group shadow-2xs hover:shadow-md"
               >
-                <span className="p-2.5 rounded-xl bg-[#25D366]/10 text-[#25D366] group-hover:bg-[#25D366]/20 transition-colors">
-                  <MessageCircle className="w-5 h-5" />
+                <span className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A0E24] shrink-0">
+                  <MessageCircle className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />
                 </span>
                 <div>
                   <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-medium">
@@ -114,8 +115,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                 href="tel:+97140000000"
                 className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 flex items-center gap-4 transition-all duration-300 group shadow-2xs hover:shadow-md"
               >
-                <span className="p-2.5 rounded-xl bg-[#2D3E8C]/10 text-[#2D3E8C] group-hover:bg-[#2D3E8C]/20 transition-colors">
-                  <Phone className="w-5 h-5" />
+                <span className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A0E24] shrink-0">
+                  <Phone className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />
                 </span>
                 <div>
                   <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-medium">
@@ -133,8 +134,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                 href="mailto:concierge@havenerproperty.com"
                 className="p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2D3E8C]/40 flex items-center gap-4 transition-all duration-300 group shadow-2xs hover:shadow-md"
               >
-                <span className="p-2.5 rounded-xl bg-[#E8922D]/10 text-[#E8922D] group-hover:bg-[#E8922D]/20 transition-colors">
-                  <Mail className="w-5 h-5" />
+                <span className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A0E24] shrink-0">
+                  <Mail className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />
                 </span>
                 <div>
                   <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-medium">
@@ -148,8 +149,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
 
               {/* Office Location */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200/80 flex items-start gap-4 shadow-2xs">
-                <span className="p-2.5 rounded-xl bg-slate-100 text-[#2D3E8C] mt-0.5">
-                  <MapPin className="w-5 h-5" />
+                <span className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A0E24] shrink-0 mt-0.5">
+                  <MapPin className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />
                 </span>
                 <div>
                   <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-medium">
@@ -163,6 +164,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                   </span>
                 </div>
               </div>
+
+              {/* Social Channels (Instagram, LinkedIn, X, YouTube, Facebook) */}
+              <div className="pt-2">
+                <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-mono font-medium mb-2.5">
+                  {lang === 'ar' ? 'تابعنا على وسائل التواصل' : 'Connect on Social Media'}
+                </span>
+                <SocialLinks variant="light" size="md" />
+              </div>
             </div>
           </div>
 
@@ -173,8 +182,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
                 <div className="bezel-inner p-6 sm:p-10">
                   {isSuccess ? (
                     <div className="py-16 text-center flex flex-col items-center">
-                      <div className="w-16 h-16 rounded-full bg-[#2D3E8C]/10 border border-[#2D3E8C]/30 flex items-center justify-center mb-6">
-                        <CheckCircle2 className="w-8 h-8 text-[#2D3E8C]" />
+                      <div className="w-14 h-14 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center mb-6 text-[#0A0E24]">
+                        <CheckCircle2 className="w-7 h-7 text-[#0A0E24]" strokeWidth={1.5} />
                       </div>
                       <h3 className="text-2xl sm:text-3xl font-serif text-[#0A0E24] mb-4 font-bold">
                         {t.form.successHeadline}
@@ -316,7 +325,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ lang }) => {
 
                       {/* Fiduciary compliance notice */}
                       <div className="flex items-center gap-2.5 text-xs text-slate-500 pt-1">
-                        <Shield className="w-4 h-4 text-[#2D3E8C] shrink-0" />
+                        <ShieldCheck className="w-4 h-4 text-[#0A0E24] shrink-0" strokeWidth={1.5} />
                         <span>
                           {lang === 'ar'
                             ? 'استشارة سرية ومحمية ائتمانياً. لا تتم مشاركة بياناتك مع أطراف خارجية دون إذنك.'

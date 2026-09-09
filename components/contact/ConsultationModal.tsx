@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2, Shield } from 'lucide-react';
+import { X, Send, Check, ShieldCheck } from 'lucide-react';
 import { Language } from '@/lib/types';
 import { TRANSLATIONS } from '@/data/translations';
 import { Button } from '@/components/ui/Button';
@@ -103,8 +103,8 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
           {isSuccess ? (
             <div className="py-12 text-center flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-[#2D3E8C]/10 border border-[#2D3E8C]/30 flex items-center justify-center mb-6">
-                <CheckCircle2 className="w-8 h-8 text-[#2D3E8C]" />
+              <div className="w-14 h-14 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center mb-6 text-[#0A0E24]">
+                <Check className="w-7 h-7 text-[#0A0E24]" strokeWidth={1.5} />
               </div>
               <h3 className="text-2xl sm:text-3xl font-serif text-[#0A0E24] mb-4 font-bold">
                 {t.form.successHeadline}
@@ -260,7 +260,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
                 {/* Privacy & Escrow Assurance */}
                 <div className="flex items-center gap-2 text-xs text-slate-500 py-1 font-medium">
-                  <Shield className="w-4 h-4 text-[#2D3E8C] shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-[#0A0E24] shrink-0" strokeWidth={1.5} />
                   <span>
                     {lang === 'ar'
                       ? 'جميع الاستفسارات مشمولة بالسرية الائتمانية وتخضع لمعايير الأراضي والأملاك بدبي.'

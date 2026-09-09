@@ -2,14 +2,14 @@
 
 import React, { useState, useMemo } from 'react';
 import {
-  TrendingUp,
-  Award,
-  Sparkles,
   ArrowUpRight,
-  CheckCircle2,
   AlertCircle,
   Scale,
-  Layers,
+  Sliders,
+  Award,
+  Check,
+  ShieldCheck,
+  TrendingUp,
 } from 'lucide-react';
 import { Language, Currency } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
@@ -289,10 +289,10 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
           {/* ------------------------------------------------------------ */}
           <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xl shadow-slate-900/5 flex flex-col gap-8">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[#2D3E8C]/10 text-[#2D3E8C] flex items-center justify-center">
-                  <Layers className="w-4 h-4" />
-                </div>
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-[#0A0E24] shrink-0">
+                  <Sliders className="w-4 h-4 text-[#0A0E24]" strokeWidth={1.5} />
+                </span>
                 <h3 className="font-serif text-lg sm:text-xl font-bold text-[#0A0E24]">
                   {t.inputsHeader}
                 </h3>
@@ -484,12 +484,12 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
 
               <div className="relative z-10">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-mono uppercase tracking-widest text-[#FCD34D]">
-                    <TrendingUp className="w-3.5 h-3.5 text-[#E8922D]" />
+                  <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-mono uppercase tracking-widest text-slate-200">
+                    <TrendingUp className="w-3.5 h-3.5 text-slate-200" strokeWidth={1.5} />
                     {holdingHorizon} {t.years} {t.financialProjections}
                   </span>
 
-                  <span className="px-3 py-1 rounded-full bg-[#E8922D]/20 border border-[#E8922D]/30 text-[#FDBA74] text-xs font-mono font-bold">
+                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-mono font-bold">
                     +{calculations.totalRoiPercent.toFixed(1)}% {t.totalReturnPercent}
                   </span>
                 </div>
@@ -547,8 +547,8 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
             {/* 0% Tax Savings Comparison Card */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-lg shadow-slate-900/5">
               <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                  <Scale className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-slate-100 border border-slate-200 text-[#0A0E24] flex items-center justify-center">
+                  <Scale className="w-4 h-4 text-[#0A0E24]" strokeWidth={1.5} />
                 </div>
                 <h4 className="font-serif text-base sm:text-lg font-bold text-[#0A0E24]">
                   {t.taxSavingsTitle}
@@ -599,8 +599,8 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
               </div>
 
               {/* Legal Note Strip */}
-              <div className="flex items-start gap-2 text-[11px] text-slate-500 bg-emerald-50/60 p-3 rounded-xl border border-emerald-100">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 text-[11px] text-slate-500 bg-slate-100/80 p-3 rounded-xl border border-slate-200">
+                <ShieldCheck className="w-4 h-4 text-[#0A0E24] shrink-0 mt-0.5" strokeWidth={1.5} />
                 <span>{t.taxNote}</span>
               </div>
             </div>
@@ -609,20 +609,14 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
             <div
               className={`rounded-3xl p-6 sm:p-7 border transition-all ${
                 calculations.isGoldenVisaEligible
-                  ? 'bg-gradient-to-br from-[#FFFDF8] via-white to-[#FEF3C7]/20 border-[#F59E0B]/40 shadow-lg'
+                  ? 'bg-white border-slate-300 shadow-lg'
                   : 'bg-white border-slate-200 shadow-md'
               }`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-                <div className="flex items-center gap-2.5">
-                  <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-                      calculations.isGoldenVisaEligible
-                        ? 'bg-[#E8922D]/15 text-[#E8922D]'
-                        : 'bg-slate-100 text-slate-500'
-                    }`}
-                  >
-                    <Award className="w-4 h-4" />
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-[#0A0E24] flex items-center justify-center shrink-0 shadow-2xs">
+                    <Award className="w-5 h-5 text-[#0A0E24]" strokeWidth={1.5} />
                   </div>
                   <div>
                     <h4 className="font-serif text-base sm:text-lg font-bold text-[#0A0E24]">
@@ -636,13 +630,13 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
 
                 {/* Status Pill */}
                 {calculations.isGoldenVisaEligible ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold tracking-wider border border-emerald-200">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-800 text-[11px] font-bold tracking-wider border border-slate-200">
+                    <Check className="w-3.5 h-3.5 text-[#0A0E24]" strokeWidth={2} />
                     {t.qualifiedBadge}
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-800 text-[11px] font-bold tracking-wider border border-amber-200">
-                    <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold tracking-wider border border-slate-200">
+                    <AlertCircle className="w-3.5 h-3.5 text-slate-500" />
                     {Math.round(calculations.goldenVisaProgress)}% / 100%
                   </span>
                 )}
@@ -654,8 +648,8 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
                   <motion.div
                     className={`h-full rounded-full ${
                       calculations.isGoldenVisaEligible
-                        ? 'bg-gradient-to-r from-[#E8922D] to-[#F59E0B]'
-                        : 'bg-gradient-to-r from-slate-400 to-[#2D3E8C]'
+                        ? 'bg-gradient-to-r from-slate-700 to-[#0A0E24]'
+                        : 'bg-gradient-to-r from-slate-300 to-slate-500'
                     }`}
                     initial={{ width: 0 }}
                     animate={{ width: `${calculations.goldenVisaProgress}%` }}
@@ -679,8 +673,8 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
                     key={idx}
                     className="flex items-start gap-2.5 p-3 rounded-xl bg-white border border-slate-100 shadow-2xs"
                   >
-                    <span className="w-4 h-4 rounded-full bg-[#E8922D]/15 text-[#E8922D] flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">
-                      ✓
+                    <span className="w-4 h-4 rounded-full bg-slate-100 text-[#0A0E24] flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">
+                      <Check className="w-2.5 h-2.5 text-[#0A0E24]" strokeWidth={2} />
                     </span>
                     <div>
                       <span className="text-xs font-bold text-[#0A0E24] block leading-tight">
@@ -718,7 +712,6 @@ export const InvestorCalculator: React.FC<InvestorCalculatorProps> = ({
             onClick={handleConsultationClick}
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-[#2D3E8C] to-[#E8922D] text-white text-sm sm:text-base font-bold tracking-wide shadow-lg shadow-blue-900/20 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-3"
           >
-            <Sparkles className="w-4 h-4 text-[#FDE68A]" />
             <span>{t.ctaButton}</span>
             <ArrowUpRight className={`w-4 h-4 ${isRtl ? 'rotate-180' : ''}`} />
           </button>

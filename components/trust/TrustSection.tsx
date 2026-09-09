@@ -81,7 +81,7 @@ export const TrustSection: React.FC<TrustSectionProps> = ({ lang }) => {
                 </h4>
               </div>
 
-              <div className="px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[11px] font-mono font-bold text-[#D97706] self-start sm:self-auto shadow-2xs">
+              <div className="px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-mono font-bold text-[#0A0E24] self-start sm:self-auto shadow-2xs">
                 ESCROW PROTECTED
               </div>
             </div>

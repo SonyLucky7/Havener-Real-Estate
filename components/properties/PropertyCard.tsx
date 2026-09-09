@@ -80,7 +80,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({
                   {property.name[lang]}
                 </h3>
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-1">
-                  <MapPin className="w-3.5 h-3.5 text-[#E8922D] shrink-0" />
+                  <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" strokeWidth={1.5} />
                   <span>{property.location[lang]}</span>
                   <span className="text-slate-300">·</span>
                   <span className="truncate">{property.subLocation[lang]}</span>
